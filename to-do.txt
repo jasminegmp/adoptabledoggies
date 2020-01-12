@@ -1,4 +1,8 @@
 Open
+- Get all zipcodes of SoCal data (90001 - 93199)
+- Get all zipcodes of Central california
+- Get all zipcodes of NorCal data
+- Get rest of California data
 - append all retrieved dataframes into one dataframe
 - go through for each zipcode:
     - for dogs with 'adoptable' status:

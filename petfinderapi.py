@@ -7,6 +7,7 @@ from urlparse import urljoin
 from pandas import DataFrame
 from pandas.io.json import json_normalize
 import numpy as np
+from time import sleep
 
 # Created class based on https://github.com/aschleg/petpy/blob/master/petpy/
 class DogFinder(object):
@@ -151,12 +152,13 @@ class DogFinder(object):
     
         params['limit'] = 100
         params['page'] = 1
-
+        
         r = requests.get(url,
                         headers={
                             'Authorization': 'Bearer ' + self._auth
                         },
                         params=params)
+        sleep(.02)
 
         max_pages = r.json()['pagination']['total_pages']
         print max_pages
@@ -172,6 +174,7 @@ class DogFinder(object):
                                 'Authorization': 'Bearer ' + self._auth
                             },
                             params=params)
+            sleep(.02)
             if isinstance(r.json(), dict):
                         if 'animals' in r.json().keys():
                             for i in r.json()['animals']:

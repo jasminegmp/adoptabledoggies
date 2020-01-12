@@ -5,6 +5,7 @@ from pandas import DataFrame
 from pandas.io.json import json_normalize
 import pickle
 import numpy as np
+from time import sleep
 
 def datamine():
     # Pull data from .pkl files
@@ -36,8 +37,38 @@ def datamine():
     unpickled_breeds = unpickled_breeds.sort_values(by=['count'], ascending=False)
     unpickled_breeds.to_csv(r'breedcount.csv', index=False, encoding='utf-8')
 
-# Count number of primary breeds and add count to breeds
 
+def get_data_zipcode(zp):
+    zipcode = ZipcodeExtractor()
+    z_df = zipcode.get_california()
+    z_df.to_pickle('z_df.pkl')
+    #print z_df
+    df = DogFinder()
+    for index, row in z_df.iterrows():
+        if row['zip'] >= zp:
+            print(row['zip'])
+            zipcode = row['zip']
+            animals = df.adoptable_pets(location = str(zipcode), distance = 3)
+            pkl_folder_path = './zipcode_pkl/' + str(zipcode) + '.pkl'
+            csv_folder_path = './zipcode_csv/' + str(zipcode) + '.csv'
+            animals.to_pickle(pkl_folder_path)
+            animals.to_csv(csv_folder_path, index=False, encoding='utf-8')
+            sleep(5)
+
+
+def get_data_specific_zipcode(zipcode):
+    print zipcode
+
+    df = DogFinder()
+    animals = df.adoptable_pets(location = str(zipcode), distance = 3)
+    animals.to_pickle(str(zipcode) + '.pkl')
+    animals.to_csv(str(zipcode)+ '.csv', index=False, encoding='utf-8')
+
+
+
+#get_data_specific_zipcode(90015)
+get_data_zipcode(90040)
+# Count number of primary breeds and add count to breeds
 
 # Find all dogs within 50 miles of zipcode 92620
 #zipcode = 92620
@@ -51,28 +82,6 @@ def datamine():
 #breeds = df.get_breeds()
 #breeds.to_pickle('breeds.pkl')
 #print breeds
-
-zipcode = ZipcodeExtractor()
-z_df = zipcode.get_california()
-z_df.to_pickle('z_df.pkl')
-#print z_df
-
-df = DogFinder()
-
-for index, row in z_df.iterrows():
-    print(row['zip'])
-    zipcode = row['zip']
-    animals = df.adoptable_pets(location = str(zipcode), distance = 3)
-    pkl_folder_path = './zipcode_pkl/' + str(zipcode) + '.pkl'
-    csv_folder_path = './zipcode_csv/' + str(zipcode) + '.csv'
-    animals.to_pickle(pkl_folder_path)
-    animals.to_csv(csv_folder_path, index=False, encoding='utf-8')
-
-#zipcode = 92620
-#df = DogFinder()
-#animals = df.adoptable_pets(location = '92620', distance = 3)
-#animals.to_pickle(str(zipcode) + '.pkl')
-#animals.to_csv(r'test.csv', index=False, encoding='utf-8')
 
 
 
