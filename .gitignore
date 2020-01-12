@@ -6,3 +6,6 @@
 .env.production.local
 petfinder.env
 petfinder_curl_commands.text
+*.pkl
+*.csv
+*.pyc

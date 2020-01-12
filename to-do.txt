@@ -1,0 +1,18 @@
+Open
+- Create script to call pet finder API from list of california zipcode and save data as dataframes
+- append all retrieved dataframes into one dataframe
+- go through for each zipcode:
+    - for dogs with 'adoptable' status:
+        - find 3 top dog breeds
+        - gender distribution
+        - age distribution
+        - sizes in order
+- Figure out translate data mining results into D3
+- Interface data mining results with Flask
+- Interface Flask with React
+- Host on Heroku
+
+Done
+- Create mockup
+- Pet Finder API interface
+- Get just CA zipcode from zipcode database
