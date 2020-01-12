@@ -1,5 +1,4 @@
 Open
-- Create script to call pet finder API from list of california zipcode and save data as dataframes
 - append all retrieved dataframes into one dataframe
 - go through for each zipcode:
     - for dogs with 'adoptable' status:
@@ -13,6 +12,7 @@ Open
 - Host on Heroku
 
 Done
+- Create script to call pet finder API from list of california zipcode and save data as dataframes
 - Create mockup
 - Pet Finder API interface
 - Get just CA zipcode from zipcode database

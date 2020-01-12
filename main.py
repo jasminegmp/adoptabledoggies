@@ -55,7 +55,24 @@ def datamine():
 zipcode = ZipcodeExtractor()
 z_df = zipcode.get_california()
 z_df.to_pickle('z_df.pkl')
-print z_df
+#print z_df
+
+df = DogFinder()
+
+for index, row in z_df.iterrows():
+    print(row['zip'])
+    zipcode = row['zip']
+    animals = df.adoptable_pets(location = str(zipcode), distance = 3)
+    pkl_folder_path = './zipcode_pkl/' + str(zipcode) + '.pkl'
+    csv_folder_path = './zipcode_csv/' + str(zipcode) + '.csv'
+    animals.to_pickle(pkl_folder_path)
+    animals.to_csv(csv_folder_path, index=False, encoding='utf-8')
+
+#zipcode = 92620
+#df = DogFinder()
+#animals = df.adoptable_pets(location = '92620', distance = 3)
+#animals.to_pickle(str(zipcode) + '.pkl')
+#animals.to_csv(r'test.csv', index=False, encoding='utf-8')
 
 
 
