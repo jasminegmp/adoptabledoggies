@@ -8,7 +8,7 @@ import numpy as np
 from time import sleep
 import os
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
 
 def read_pkl(r_filename, columns):
     # Pull data from .pkl files
@@ -162,13 +162,9 @@ def get_categorical_data(r_filename, w_filename):
     # adopted - false, adoptable - true
     for i, row_value in categorical_df['status'].iteritems():
         if row_value == 'adopted':
-            categorical_df.at[i, 'status'] = False
+            categorical_df.at[i, 'status'] = 0
         if row_value == 'adoptable':
-            categorical_df.at[i, 'status'] = True
-
-    #target_np_arr = target_df.status.values
-    #np.save('./90001_90083_test/numpy_target', target_np_arr)
-    #print target_np_arr
+            categorical_df.at[i, 'status'] = 1
 
     #print categorical_df
     write_pkl(categorical_df, w_filename)
@@ -182,23 +178,39 @@ def random_forest(r_filename, w_filename):
     categorical_df = pd.read_pickle(r_filename + ".pkl")
 
     #print categorical_df
+    # x - attributes, y labels
+    X = categorical_df.iloc[:, 0:7].values
+    y = categorical_df.iloc[:, -1].values
 
-    train, test = (categorical_df[:100], categorical_df[100:])
-    target = np.load('./90001_90083_test/numpy_target.npy', allow_pickle = True) 
-    #print target
-    y_train, y_test = (target[:100], target[100:])
+    print X
+    print X.shape
+    print y
+    print y.shape
 
-    y_train = y_train.astype('bool')
-    y_test = y_test.astype('bool')
+    # split data into training and testing set
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-    #print y_train
-    #print y_test
-    
-    clf = RandomForestClassifier()
-    clf.fit(train, y_train)
+    X_train = X_train.astype('bool')
+    X_test = X_test.astype('bool')
+    y_train = y_train.astype('int')
+    y_test = y_test.astype('int')
+    print type(y_test[2])
 
-    groups = test.groupby(test.index // 10)
-    groups.apply(clf.predict)
+
+
+    print y_train, y_test
+
+    # train algorithm
+    ## This line instantiates the model. 
+    rf = RandomForestClassifier() 
+
+    ## Fit the model on your training data.
+    rf.fit(X_train, y_train) 
+
+    feature_names = ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'breeds.mixed', 'breeds.unknown', 'gender']
+    for feature in zip(feature_names, rf.feature_importances_):
+        print(feature)
+
 
 #get_data_specific_zipcode(90015)
 #get_data_zipcode(90074)
@@ -207,13 +219,9 @@ def random_forest(r_filename, w_filename):
 #get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
 #get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
 #get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
-get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
+#get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
 
-#random_forest("./90001_90083_test/90001_90083_categorical", "./90001_90083_test/90001_90083_categorical_results")
-
-#iris = load_iris()
-#df = pd.DataFrame(iris.data, columns=iris.feature_names)
-#print iris.target
+random_forest("./90001_90083_test/90001_90083_categorical", "./90001_90083_test/90001_90083_categorical_results")
 
 # Count number of primary breeds and add count to breeds
 
