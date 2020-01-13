@@ -8,15 +8,24 @@ import numpy as np
 from time import sleep
 import os
 
-def get_breed_count(r_filename, w_filename):
+def read_pkl(r_filename, columns):
     # Pull data from .pkl files
     unpickled_df = pd.read_pickle(r_filename + ".pkl")
-    unpickled_breeds = pd.read_pickle("breeds.pkl")
-    #print unpickled_df
-    #print unpickled_breeds
+    df = unpickled_df[columns]
+    return df
 
-    # simplify df to only have columns: breeds.mixed, breeds.primary, breeds.secondary, contact.address.postcode, age, gender, size, published_at, status_changed_at
-    breed_df = unpickled_df[['breeds.mixed','breeds.primary', 'breeds.secondary', 'contact.address.postcode', 'age', 'gender', 'size', 'published_at', 'status_changed_at']]
+def write_pkl(df, w_filename):
+    df.to_pickle(w_filename + '.pkl')
+
+def write_csv(df, w_filename):
+     df.to_csv(w_filename + '.csv', index=False, encoding='utf-8')
+
+def get_breed_count(r_filename, w_filename):
+    print "Getting breed count..."
+
+    # Pull data from .pkl files
+    breed_df = read_pkl(r_filename, ['breeds.mixed','breeds.primary', 'breeds.secondary', 'contact.address.postcode', 'age', 'gender', 'size', 'published_at', 'status_changed_at'])
+    unpickled_breeds = pd.read_pickle("breeds.pkl")
 
     # add a count to breeds df
     unpickled_breeds["count"] = 0
@@ -33,10 +42,30 @@ def get_breed_count(r_filename, w_filename):
         if col == 'contact.address.postcode':
             continue # for now
 
-    unpickled_breeds.to_pickle(w_filename + '.pkl')
-    unpickled_breeds = unpickled_breeds.sort_values(by=['count'], ascending=False)
-    unpickled_breeds.to_csv(w_filename + '.csv', index=False, encoding='utf-8')
+    write_pkl(unpickled_breeds, w_filename)
 
+    unpickled_breeds = unpickled_breeds.sort_values(by=['count'], ascending=False)
+
+    write_csv(unpickled_breeds, w_filename)
+   
+def get_gender_count(r_filename, w_filename):
+    print "Getting gender count..."
+
+    # Pull data from .pkl file
+    gender_df = read_pkl(r_filename, ['gender'])
+
+    # create dataframe for gender
+    gender_initial = [['Female', 0], ['Male', 0]] 
+    gender_count_df = DataFrame(gender_initial, columns=['gender', 'count'])
+
+    gender_count_df["count"] = 0
+    #print gender_count_df
+    for i, row_value in gender_df['gender'].iteritems():
+        #print row_value
+        gender_count_df['count'] += gender_count_df['gender'].str.contains(row_value).astype(int)
+    
+    write_pkl(gender_count_df, w_filename)
+    write_csv(gender_count_df, w_filename)
 
 def get_data_zipcode(zp):
     zipcode = ZipcodeExtractor()
@@ -71,9 +100,10 @@ def append_dataframes(w_filename):
             print filename
             read_df = pd.read_pickle("./test_pkl/" + filename)
             df = df.append([read_df])
+
     # Removing all duplicate rows
     df = df.drop_duplicates(subset ="animal_id", keep = 'first')
-    #df.to_pickle("cleaned.pkl")
+    
     df.to_pickle(w_filename + ".pkl")
     print df
     return df
@@ -82,9 +112,9 @@ def append_dataframes(w_filename):
 #get_data_specific_zipcode(90015)
 #get_data_zipcode(90074)
 
-df = append_dataframes("90001_90083")
-get_breed_count("90001_90083", "90001_90083_breed_count")
-
+#df = append_dataframes("90001_90083")
+get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
+#get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
 
 
 
