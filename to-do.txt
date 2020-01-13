@@ -10,6 +10,9 @@ Open
         - gender distribution
         - age distribution
         - sizes in order
+    - for dogs with 'adopted' status:
+        - order by least to most time
+            -get their gender, breed, age, size, house trained, shots, spayed/neutered,
 - Figure out translate data mining results into D3
 - Interface data mining results with Flask
 - Interface Flask with React

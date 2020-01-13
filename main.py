@@ -67,6 +67,46 @@ def get_gender_count(r_filename, w_filename):
     write_pkl(gender_count_df, w_filename)
     write_csv(gender_count_df, w_filename)
 
+def get_age_count(r_filename, w_filename):
+    print "Getting age count..."
+
+    # Pull data from .pkl file
+    age_df = read_pkl(r_filename, ['age'])
+
+    # create dataframe for gender
+    age_initial = [['Senior', 0], ['Adult', 0], ['Young', 0], ['Baby', 0]] 
+    age_count_df = DataFrame(age_initial, columns=['age', 'count'])
+
+    age_count_df["count"] = 0
+    #print gender_count_df
+    for i, row_value in age_df['age'].iteritems():
+        #print row_value
+        age_count_df['count'] += age_count_df['age'].str.contains(row_value).astype(int)
+    
+    write_pkl(age_count_df, w_filename)
+    write_csv(age_count_df, w_filename)
+
+def get_size_count(r_filename, w_filename):
+    print "Getting size count..."
+
+    # Pull data from .pkl file
+    size_df = read_pkl(r_filename, ['size'])
+
+    # create dataframe for gender
+    size_initial = [['Small', 0], ['Medium', 0], ['Large', 0], ['Extra Large', 0]] 
+    size_count_df = DataFrame(size_initial, columns=['size', 'count'])
+
+    size_count_df["count"] = 0
+    #print gender_count_df
+    for i, row_value in size_df['size'].iteritems():
+        #print row_value
+        size_count_df['count'] += size_count_df['size'].str.contains(row_value).astype(int)
+    
+    write_pkl(size_count_df, w_filename)
+    write_csv(size_count_df, w_filename)
+
+
+
 def get_data_zipcode(zp):
     zipcode = ZipcodeExtractor()
     z_df = zipcode.get_california()
@@ -113,8 +153,10 @@ def append_dataframes(w_filename):
 #get_data_zipcode(90074)
 
 #df = append_dataframes("90001_90083")
-get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
+#get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
 #get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
+#get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
+get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
 
 
 
