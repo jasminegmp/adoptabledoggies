@@ -10,9 +10,10 @@ Open
         - gender distribution
         - age distribution
         - sizes in order
-    - for dogs with 'adopted' status:
-        - order by least to most time
-            -get their gender, breed, age, size, house trained, shots, spayed/neutered,
+    - What variables impact whether Dog A gets adopted?
+        - Fit a random forest with the 200+ variables and the outcome is 1 or 0
+        - 1 being adopted or not
+        - Naturally in random forest, top tree nodes are the most important
 - Figure out translate data mining results into D3
 - Interface data mining results with Flask
 - Interface Flask with React

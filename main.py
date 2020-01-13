@@ -10,8 +10,8 @@ import os
 
 def read_pkl(r_filename, columns):
     # Pull data from .pkl files
-    unpickled_df = pd.read_pickle(r_filename + ".pkl")
-    df = unpickled_df[columns]
+    df = pd.read_pickle(r_filename + ".pkl")
+    df = df[columns]
     return df
 
 def write_pkl(df, w_filename):
@@ -105,8 +105,6 @@ def get_size_count(r_filename, w_filename):
     write_pkl(size_count_df, w_filename)
     write_csv(size_count_df, w_filename)
 
-
-
 def get_data_zipcode(zp):
     zipcode = ZipcodeExtractor()
     z_df = zipcode.get_california()
@@ -156,10 +154,7 @@ def append_dataframes(w_filename):
 #get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
 #get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
 #get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
-get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
-
-
-
+#get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
 
 # Count number of primary breeds and add count to breeds
 
@@ -175,8 +170,4 @@ get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083
 #breeds = df.get_breeds()
 #breeds.to_pickle('breeds.pkl')
 #print breeds
-
-
-
-
 
