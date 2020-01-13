@@ -7,12 +7,14 @@ import pickle
 import numpy as np
 from time import sleep
 import os
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
 
 def read_pkl(r_filename, columns):
     # Pull data from .pkl files
     df = pd.read_pickle(r_filename + ".pkl")
     df = df[columns]
-    return df
+    return df    
 
 def write_pkl(df, w_filename):
     df.to_pickle(w_filename + '.pkl')
@@ -122,7 +124,6 @@ def get_data_zipcode(zp):
             animals.to_csv(csv_folder_path, index=False, encoding='utf-8')
             sleep(5)
 
-
 def get_data_specific_zipcode(zipcode):
     print zipcode
 
@@ -146,15 +147,73 @@ def append_dataframes(w_filename):
     print df
     return df
 
+def get_categorical_data(r_filename, w_filename):
+    categorical_df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'breeds.mixed', 'breeds.unknown', 'gender', 'status'])
+    
+    # modify data so that everything is true and false
+
+    # Female - false, Male - true
+    for i, row_value in categorical_df['gender'].iteritems():
+        if row_value == 'Female':
+            categorical_df.at[i, 'gender'] = False
+        if row_value == 'Male':
+            categorical_df.at[i, 'gender'] = True
+
+    # adopted - false, adoptable - true
+    for i, row_value in categorical_df['status'].iteritems():
+        if row_value == 'adopted':
+            categorical_df.at[i, 'status'] = False
+        if row_value == 'adoptable':
+            categorical_df.at[i, 'status'] = True
+
+    #target_np_arr = target_df.status.values
+    #np.save('./90001_90083_test/numpy_target', target_np_arr)
+    #print target_np_arr
+
+    #print categorical_df
+    write_pkl(categorical_df, w_filename)
+    write_csv(categorical_df, w_filename)
+    
+
+def random_forest(r_filename, w_filename):
+    print "Getting size count..."
+
+    # Pull data from .pkl file with just categorical data
+    categorical_df = pd.read_pickle(r_filename + ".pkl")
+
+    #print categorical_df
+
+    train, test = (categorical_df[:100], categorical_df[100:])
+    target = np.load('./90001_90083_test/numpy_target.npy', allow_pickle = True) 
+    #print target
+    y_train, y_test = (target[:100], target[100:])
+
+    y_train = y_train.astype('bool')
+    y_test = y_test.astype('bool')
+
+    #print y_train
+    #print y_test
+    
+    clf = RandomForestClassifier()
+    clf.fit(train, y_train)
+
+    groups = test.groupby(test.index // 10)
+    groups.apply(clf.predict)
 
 #get_data_specific_zipcode(90015)
 #get_data_zipcode(90074)
-
 #df = append_dataframes("90001_90083")
 #get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
 #get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
 #get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
 #get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
+get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
+
+#random_forest("./90001_90083_test/90001_90083_categorical", "./90001_90083_test/90001_90083_categorical_results")
+
+#iris = load_iris()
+#df = pd.DataFrame(iris.data, columns=iris.feature_names)
+#print iris.target
 
 # Count number of primary breeds and add count to breeds
 
