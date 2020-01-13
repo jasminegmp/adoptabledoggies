@@ -171,8 +171,8 @@ def get_categorical_data(r_filename, w_filename):
     write_csv(categorical_df, w_filename)
     
 
-def random_forest(r_filename, w_filename):
-    print "Getting size count..."
+def random_forest_feature_importance(r_filename, w_filename):
+    print "Finding important features..."
 
     # Pull data from .pkl file with just categorical data
     categorical_df = pd.read_pickle(r_filename + ".pkl")
@@ -182,10 +182,10 @@ def random_forest(r_filename, w_filename):
     X = categorical_df.iloc[:, 0:7].values
     y = categorical_df.iloc[:, -1].values
 
-    print X
-    print X.shape
-    print y
-    print y.shape
+    #print X
+    #print X.shape
+    #print y
+    #print y.shape
 
     # split data into training and testing set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
@@ -194,15 +194,22 @@ def random_forest(r_filename, w_filename):
     X_test = X_test.astype('bool')
     y_train = y_train.astype('int')
     y_test = y_test.astype('int')
-    print type(y_test[2])
+    #print type(y_test[2])
 
-
-
-    print y_train, y_test
+    #print y_train, y_test
 
     # train algorithm
     ## This line instantiates the model. 
-    rf = RandomForestClassifier() 
+    #rf = RandomForestClassifier()
+    rf = RandomForestClassifier(bootstrap=True,
+            class_weight= dict({1:3, 0:52}), 
+            criterion='gini',
+            max_depth=4, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=4, min_samples_split=10,
+            min_weight_fraction_leaf=0.0, n_estimators=300,
+            oob_score=False,
+            verbose=0, warm_start=False)
 
     ## Fit the model on your training data.
     rf.fit(X_train, y_train) 
@@ -210,6 +217,7 @@ def random_forest(r_filename, w_filename):
     feature_names = ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'breeds.mixed', 'breeds.unknown', 'gender']
     for feature in zip(feature_names, rf.feature_importances_):
         print(feature)
+
 
 
 #get_data_specific_zipcode(90015)
@@ -221,8 +229,7 @@ def random_forest(r_filename, w_filename):
 #get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
 #get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
 
-random_forest("./90001_90083_test/90001_90083_categorical", "./90001_90083_test/90001_90083_categorical_results")
-
+random_forest_feature_importance("./90001_90083_test/90001_90083_categorical", "./90001_90083_test/90001_90083_categorical_results")
 # Count number of primary breeds and add count to breeds
 
 # Find all dogs within 50 miles of zipcode 92620

@@ -4,16 +4,7 @@ Open
 - Get all zipcodes of NorCal data
 - Get rest of California data
 - append all retrieved dataframes into one dataframe
-- go through for each zipcode:
-    - for dogs with 'adoptable' status:
-        - find 3 top dog breeds
-        - gender distribution
-        - age distribution
-        - sizes in order
-    - What variables impact whether Dog A gets adopted?
-        - Fit a random forest with the 200+ variables and the outcome is 1 or 0
-        - 1 being adopted or not
-        - Naturally in random forest, top tree nodes are the most important
+
 - Figure out translate data mining results into D3
 - Interface data mining results with Flask
 - Interface Flask with React
@@ -24,3 +15,27 @@ Done
 - Create mockup
 - Pet Finder API interface
 - Get just CA zipcode from zipcode database
+- go through for each zipcode:
+    - for dogs with 'adoptable' status:
+        - find 3 top dog breeds
+        - gender distribution
+        - age distribution
+        - sizes in order
+- What variables impact whether Dog A gets adopted?
+    - Fit a random forest and the outcome is 1 or 0
+    - 1 being adopted or not
+    - Naturally in random forest, top tree nodes are the most important
+- Fix - What variables impact whether Dog A gets adopted? - oversampling issue by upsampling the adopted dogs
+    - Weight the adopted ones at a ratio of 52/3 more dict{1:52, 2:3}
+    from sklearn.ensemble import RandomForestClassifier
+        class_weight = dict({1:1.9, 2:35, 3:180})
+        rdf = RandomForestClassifier(bootstrap=True,
+                    class_weight=class_weight, 
+                    criterion='gini',
+                    max_depth=8, max_features='auto', max_leaf_nodes=None,
+                    min_impurity_decrease=0.0, min_impurity_split=None,
+                    min_samples_leaf=4, min_samples_split=10,
+                    min_weight_fraction_leaf=0.0, n_estimators=300,
+                    oob_score=False,
+                    random_state=random_state,
+                    verbose=0, warm_start=False)
