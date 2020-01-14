@@ -9,6 +9,7 @@ from time import sleep
 import os
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
 
 def read_pkl(r_filename, columns):
     # Pull data from .pkl files
@@ -169,18 +170,60 @@ def get_categorical_data(r_filename, w_filename):
     #print categorical_df
     write_pkl(categorical_df, w_filename)
     write_csv(categorical_df, w_filename)
+
+def categorical_to_numeric(x):
+    if x==True:
+        return 1
+    if x==False:
+        return 0
+
+def get_nominal_data(r_filename, w_filename):
+    nominal_df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'age', 'gender', 'status'])
+    
+    # modify data so all categorical attributes are nominal using One Hot Encoding
+    # https://datascience.stackexchange.com/questions/32622/how-to-make-a-decision-tree-when-i-have-both-continous-and-categorical-variables
+    # https://towardsdatascience.com/categorical-encoding-using-label-encoding-and-one-hot-encoder-911ef77fb5bd
+  
+
+    
+    nominal_df['attributes.house_trained'] = nominal_df['attributes.house_trained'].apply(categorical_to_numeric)
+    nominal_df['attributes.shots_current'] = nominal_df['attributes.shots_current'].apply(categorical_to_numeric)
+    nominal_df['attributes.spayed_neutered'] = nominal_df['attributes.spayed_neutered'].apply(categorical_to_numeric)
+    nominal_df['attributes.special_needs'] = nominal_df['attributes.special_needs'].apply(categorical_to_numeric)
+
+    for i, row_value in nominal_df['gender'].iteritems():
+        if row_value == 'Male':
+            nominal_df.at[i, 'gender'] = 1
+        if row_value == 'Female':
+            nominal_df.at[i, 'gender'] = 0
+
+    for i, row_value in nominal_df['status'].iteritems():
+        if row_value == 'adopted':
+            nominal_df.at[i, 'status'] = 0
+        if row_value == 'adoptable':
+            nominal_df.at[i, 'status'] = 1 
+    
+    # One hot encoder on age
+    temp_df = pd.get_dummies(nominal_df['age'])
+    nominal_df = nominal_df.join(temp_df)
+    del nominal_df['age']
+
+    #print nominal_df
+    write_pkl(nominal_df, w_filename)
+    write_csv(nominal_df, w_filename)
+
     
 
 def random_forest_feature_importance(r_filename, w_filename):
     print "Finding important features..."
 
     # Pull data from .pkl file with just categorical data
-    categorical_df = pd.read_pickle(r_filename + ".pkl")
+    df = pd.read_pickle(r_filename + ".pkl")
 
     #print categorical_df
     # x - attributes, y labels
-    X = categorical_df.iloc[:, 0:7].values
-    y = categorical_df.iloc[:, -1].values
+    X = df.iloc[:, np.r_[0,1,2,3,4,6,7,8,9]].values
+    y = df.iloc[:, 5].values
 
     #print X
     #print X.shape
@@ -195,9 +238,10 @@ def random_forest_feature_importance(r_filename, w_filename):
     y_train = y_train.astype('int')
     y_test = y_test.astype('int')
     #print type(y_test[2])
-
+    #print x
+    #print y_test
     #print y_train, y_test
-
+#
     # train algorithm
     ## This line instantiates the model. 
     #rf = RandomForestClassifier()
@@ -212,9 +256,9 @@ def random_forest_feature_importance(r_filename, w_filename):
             verbose=0, warm_start=False)
 
     ## Fit the model on your training data.
-    rf.fit(X_train, y_train) 
+    rf.fit(X_train, y_train)
 
-    feature_names = ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'breeds.mixed', 'breeds.unknown', 'gender']
+    feature_names = ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs','gender', 'Adult', 'Baby', 'Senior', 'Young']
     for feature in zip(feature_names, rf.feature_importances_):
         print(feature)
 
@@ -228,8 +272,8 @@ def random_forest_feature_importance(r_filename, w_filename):
 #get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
 #get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
 #get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
-
-random_forest_feature_importance("./90001_90083_test/90001_90083_categorical", "./90001_90083_test/90001_90083_categorical_results")
+#get_nominal_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_nominal")
+random_forest_feature_importance("./90001_90083_test/90001_90083_nominal", "./90001_90083_test/90001_90083_nominal_results")
 # Count number of primary breeds and add count to breeds
 
 # Find all dogs within 50 miles of zipcode 92620
