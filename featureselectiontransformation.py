@@ -1,27 +1,9 @@
-from petfinderapi import DogFinder
-from zipcodeapi import ZipcodeExtractor
-from featuremining import *
-from featureselectiontransformation import *
-from featurecleaningandintegration import *
 import pandas as pd
 from pandas import DataFrame
 from pandas.io.json import json_normalize
 import pickle
 import numpy as np
-from time import sleep
 import os
-
-def read_pkl(r_filename, columns):
-    # Pull data from .pkl files
-    df = pd.read_pickle(r_filename + ".pkl")
-    df = df[columns]
-    return df    
-
-def write_pkl(df, w_filename):
-    df.to_pickle(w_filename + '.pkl')
-
-def write_csv(df, w_filename):
-     df.to_csv(w_filename + '.csv', index=False, encoding='utf-8')
 
 def get_breed_count(r_filename, w_filename):
     print "Getting breed count..."
@@ -133,47 +115,76 @@ def get_data_specific_zipcode(zipcode):
     animals.to_pickle(str(zipcode) + '.pkl')
     animals.to_csv(str(zipcode)+ '.csv', index=False, encoding='utf-8')
 
-def append_dataframes(w_filename):
-    df = DataFrame()
-    for filename in os.listdir("./test_pkl"):
-        if filename.endswith(".pkl"):
-            print filename
-            read_df = pd.read_pickle("./test_pkl/" + filename)
-            df = df.append([read_df])
+def categorical_to_numeric(x):
+    if x==True:
+        return 1
+    if x==False:
+        return 0
 
-    # Removing all duplicate rows
-    df = df.drop_duplicates(subset ="animal_id", keep = 'first')
+def get_data(r_filename, w_filename):
+    df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'age', 'gender', 'size', 'status'])
+    df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'status'])
+    # modify data so all categorical attributes are nominal using One Hot Encoding
+    # https://datascience.stackexchange.com/questions/32622/how-to-make-a-decision-tree-when-i-have-both-continous-and-categorical-variables
+    # https://towardsdatascience.com/categorical-encoding-using-label-encoding-and-one-hot-encoder-911ef77fb5bd
+  
+    df['attributes.house_trained'] = df['attributes.house_trained'].apply(categorical_to_numeric)
+    df['attributes.shots_current'] = df['attributes.shots_current'].apply(categorical_to_numeric)
+    df['attributes.spayed_neutered'] = df['attributes.spayed_neutered'].apply(categorical_to_numeric)
+    df['attributes.special_needs'] = df['attributes.special_needs'].apply(categorical_to_numeric)
+    '''
+    for i, row_value in df['gender'].iteritems():
+        if row_value == 'Male':
+            df.at[i, 'gender'] = 1
+        if row_value == 'Female':
+            df.at[i, 'gender'] = 0
+
+    for i, row_value in df['status'].iteritems():
+        if row_value == 'adopted':
+            df.at[i, 'status'] = 0
+        if row_value == 'adoptable':
+            df.at[i, 'status'] = 1 
+
+    for i, row_value in df['size'].iteritems():
+        if row_value == 'Small':
+            df.at[i, 'size'] = 1
+        if row_value == 'Medium':
+            df.at[i, 'size'] = 2
+        if row_value == 'Large':
+            df.at[i, 'size'] = 3
+        if row_value == 'Extra Large':
+            df.at[i, 'size'] = 4  
     
-    df.to_pickle(w_filename + ".pkl")
-    print df
-    return df
 
+    for i, row_value in df['age'].iteritems():
+        if row_value == 'Baby':
+            df.at[i, 'age'] = 1
+        if row_value == 'Young':
+            df.at[i, 'age'] = 2
+        if row_value == 'Adult':
+            df.at[i, 'age'] = 3 
+        if row_value == 'Senior':
+            df.at[i, 'age'] = 4  
+    
+    # remove unknowns
+    df['gender'] = pd.to_numeric(df['gender'], errors='coerce')
+    df['status'] = pd.to_numeric(df['status'], errors='coerce')
+    df['size'] = pd.to_numeric(df['size'], errors='coerce')
+    df['age'] = pd.to_numeric(df['age'], errors='coerce')
+    '''
+    for i, row_value in df['status'].iteritems():
+        if row_value == 'adopted':
+            df.at[i, 'status'] = False
+        if row_value == 'adoptable':
+            df.at[i, 'status'] = True
+    df['attributes.house_trained'] = pd.to_numeric(df['attributes.house_trained'], errors='coerce')
+    df['attributes.shots_current'] = pd.to_numeric(df['attributes.shots_current'], errors='coerce')
+    df['attributes.spayed_neutered'] = pd.to_numeric(df['attributes.spayed_neutered'], errors='coerce')
+    df['attributes.special_needs'] = pd.to_numeric(df['attributes.special_needs'], errors='coerce')
 
-#get_data_specific_zipcode(90015)
-#get_data_zipcode(92106)
-#df = append_dataframes("90001_90083")
-#get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
-#get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
-#get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
-#get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
-#get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
-#get_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_nominal")
-random_forest_feature_importance("./90001_90083_test/90001_90083_nominal", "./90001_90083_test/90001_90083_nominal_results")
+    
 
-
-
-# Count number of primary breeds and add count to breeds
-
-# Find all dogs within 50 miles of zipcode 92620
-#zipcode = 92620
-#distance = 50
-#df = DogFinder()
-#animals = df.adoptable_pets(location = '92620', distance = 2)
-#animals.to_pickle('test.pkl')
-#print animals
-
-# get list of breeds
-#breeds = df.get_breeds()
-#breeds.to_pickle('breeds.pkl')
-#print breeds
+    #print nominal_df
+    write_pkl(df, w_filename)
+    write_csv(df, w_filename)
 
