@@ -148,18 +148,39 @@ def append_dataframes(w_filename):
     print df
     return df
 
+    
+def input_script():
+    option = input("1. Grab Data\n2. get count\n3. Random forest\n")
+    print(option)
+    if (option == 1):
+        zipcode = input("Starting zipcode?\n")
+        print zipcode
+        get_data_zipcode(zipcode)
+    if (option == 2):
+        get_count_opt = input("21. breed count \n22. gender count \n23. age count \n24.size_count\n")
+        print(get_count_opt)
+        if (get_count_opt ==  21):
+            get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
+        if (get_count_opt == 22):
+            get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
+        if (get_count_opt == 23):
+            get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
+        if (get_count_opt == 24):
+            get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
+    if (option == 3):
+        random_forest_feature_importance("./90001_90083_test/90001_90083_nominal", "./90001_90083_test/90001_90083_nominal_results")
+
+
 
 #get_data_specific_zipcode(90015)
-#get_data_zipcode(92106)
 #df = append_dataframes("90001_90083")
-#get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
-#get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
-#get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
-#get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
 #get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
 #get_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_nominal")
-random_forest_feature_importance("./90001_90083_test/90001_90083_nominal", "./90001_90083_test/90001_90083_nominal_results")
 
+
+#get_data_zipcode(92106)
+#
+input_script()
 
 
 # Count number of primary breeds and add count to breeds
