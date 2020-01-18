@@ -5,6 +5,11 @@ Open
 - Get rest of California data
 - append all retrieved dataframes into one dataframe
 
+- one hot encoding on dog breeds (keep in mind imbalance)
+- check results on random forest classifier on all categorical attributes
+    - make sure categorical data is true and False
+    - make sure ordinal values are 1,2,3,4
+    
 - Figure out translate data mining results into D3
 - Interface data mining results with Flask
 - Interface Flask with React

@@ -177,42 +177,77 @@ def categorical_to_numeric(x):
     if x==False:
         return 0
 
-def get_nominal_data(r_filename, w_filename):
-    nominal_df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'age', 'gender', 'status'])
-    
+def get_data(r_filename, w_filename):
+    df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'age', 'gender', 'size', 'status'])
+    df = read_pkl(r_filename, ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs', 'status'])
     # modify data so all categorical attributes are nominal using One Hot Encoding
     # https://datascience.stackexchange.com/questions/32622/how-to-make-a-decision-tree-when-i-have-both-continous-and-categorical-variables
     # https://towardsdatascience.com/categorical-encoding-using-label-encoding-and-one-hot-encoder-911ef77fb5bd
   
-
-    
-    nominal_df['attributes.house_trained'] = nominal_df['attributes.house_trained'].apply(categorical_to_numeric)
-    nominal_df['attributes.shots_current'] = nominal_df['attributes.shots_current'].apply(categorical_to_numeric)
-    nominal_df['attributes.spayed_neutered'] = nominal_df['attributes.spayed_neutered'].apply(categorical_to_numeric)
-    nominal_df['attributes.special_needs'] = nominal_df['attributes.special_needs'].apply(categorical_to_numeric)
-
-    for i, row_value in nominal_df['gender'].iteritems():
+    df['attributes.house_trained'] = df['attributes.house_trained'].apply(categorical_to_numeric)
+    df['attributes.shots_current'] = df['attributes.shots_current'].apply(categorical_to_numeric)
+    df['attributes.spayed_neutered'] = df['attributes.spayed_neutered'].apply(categorical_to_numeric)
+    df['attributes.special_needs'] = df['attributes.special_needs'].apply(categorical_to_numeric)
+    '''
+    for i, row_value in df['gender'].iteritems():
         if row_value == 'Male':
-            nominal_df.at[i, 'gender'] = 1
+            df.at[i, 'gender'] = 1
         if row_value == 'Female':
-            nominal_df.at[i, 'gender'] = 0
+            df.at[i, 'gender'] = 0
 
-    for i, row_value in nominal_df['status'].iteritems():
+    for i, row_value in df['status'].iteritems():
         if row_value == 'adopted':
-            nominal_df.at[i, 'status'] = 0
+            df.at[i, 'status'] = 0
         if row_value == 'adoptable':
-            nominal_df.at[i, 'status'] = 1 
+            df.at[i, 'status'] = 1 
+
+    for i, row_value in df['size'].iteritems():
+        if row_value == 'Small':
+            df.at[i, 'size'] = 1
+        if row_value == 'Medium':
+            df.at[i, 'size'] = 2
+        if row_value == 'Large':
+            df.at[i, 'size'] = 3
+        if row_value == 'Extra Large':
+            df.at[i, 'size'] = 4  
     
-    # One hot encoder on age
-    temp_df = pd.get_dummies(nominal_df['age'])
-    nominal_df = nominal_df.join(temp_df)
-    del nominal_df['age']
+
+    for i, row_value in df['age'].iteritems():
+        if row_value == 'Baby':
+            df.at[i, 'age'] = 1
+        if row_value == 'Young':
+            df.at[i, 'age'] = 2
+        if row_value == 'Adult':
+            df.at[i, 'age'] = 3 
+        if row_value == 'Senior':
+            df.at[i, 'age'] = 4  
+    
+    # remove unknowns
+    df['gender'] = pd.to_numeric(df['gender'], errors='coerce')
+    df['status'] = pd.to_numeric(df['status'], errors='coerce')
+    df['size'] = pd.to_numeric(df['size'], errors='coerce')
+    df['age'] = pd.to_numeric(df['age'], errors='coerce')
+    '''
+    for i, row_value in df['status'].iteritems():
+        if row_value == 'adopted':
+            df.at[i, 'status'] = False
+        if row_value == 'adoptable':
+            df.at[i, 'status'] = True
+    df['attributes.house_trained'] = pd.to_numeric(df['attributes.house_trained'], errors='coerce')
+    df['attributes.shots_current'] = pd.to_numeric(df['attributes.shots_current'], errors='coerce')
+    df['attributes.spayed_neutered'] = pd.to_numeric(df['attributes.spayed_neutered'], errors='coerce')
+    df['attributes.special_needs'] = pd.to_numeric(df['attributes.special_needs'], errors='coerce')
+
+    
 
     #print nominal_df
-    write_pkl(nominal_df, w_filename)
-    write_csv(nominal_df, w_filename)
+    write_pkl(df, w_filename)
+    write_csv(df, w_filename)
 
-    
+def get_ratio(df):
+    print "Getting ratio to oversample adopted data..."
+    [adoptable_ratio, adopted_ratio] = df['status'].value_counts()
+    return adopted_ratio, adoptable_ratio
 
 def random_forest_feature_importance(r_filename, w_filename):
     print "Finding important features..."
@@ -220,33 +255,29 @@ def random_forest_feature_importance(r_filename, w_filename):
     # Pull data from .pkl file with just categorical data
     df = pd.read_pickle(r_filename + ".pkl")
 
+    adopted_ratio, adoptable_ratio = get_ratio(df)
+    #print adopted_ratio, adoptable_ratio
+
     #print categorical_df
     # x - attributes, y labels
-    X = df.iloc[:, np.r_[0,1,2,3,4,6,7,8,9]].values
-    y = df.iloc[:, 5].values
+    X = df.iloc[:, df.columns != 'status'].values
+    y = df.iloc[:, df.columns == 'status'].values
 
-    #print X
-    #print X.shape
-    #print y
-    #print y.shape
 
     # split data into training and testing set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    print X_train, y_train
 
-    X_train = X_train.astype('bool')
-    X_test = X_test.astype('bool')
+    X_train = X_train.astype('int')
+    X_test = X_test.astype('int')
     y_train = y_train.astype('int')
     y_test = y_test.astype('int')
-    #print type(y_test[2])
-    #print x
-    #print y_test
-    #print y_train, y_test
-#
+
     # train algorithm
     ## This line instantiates the model. 
     #rf = RandomForestClassifier()
     rf = RandomForestClassifier(bootstrap=True,
-            class_weight= dict({1:3, 0:52}), 
+            class_weight= dict({False:adopted_ratio, True:adoptable_ratio}), 
             criterion='gini',
             max_depth=4, max_features='auto', max_leaf_nodes=None,
             min_impurity_decrease=0.0, min_impurity_split=None,
@@ -256,23 +287,23 @@ def random_forest_feature_importance(r_filename, w_filename):
             verbose=0, warm_start=False)
 
     ## Fit the model on your training data.
-    rf.fit(X_train, y_train)
+    rf.fit(X_train, y_train.ravel())
 
-    feature_names = ['attributes.house_trained', 'attributes.shots_current', 'attributes.spayed_neutered', 'attributes.special_needs','gender', 'Adult', 'Baby', 'Senior', 'Young']
+    feature_names = list(df.columns.values)
     for feature in zip(feature_names, rf.feature_importances_):
         print(feature)
-
+        
 
 
 #get_data_specific_zipcode(90015)
-#get_data_zipcode(90074)
+#get_data_zipcode(92106)
 #df = append_dataframes("90001_90083")
 #get_breed_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_breed_count")
 #get_gender_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_gender_count")
 #get_age_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_age_count")
 #get_size_count("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_size_count")
 #get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
-#get_nominal_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_nominal")
+#get_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_nominal")
 random_forest_feature_importance("./90001_90083_test/90001_90083_nominal", "./90001_90083_test/90001_90083_nominal_results")
 # Count number of primary breeds and add count to breeds
 
