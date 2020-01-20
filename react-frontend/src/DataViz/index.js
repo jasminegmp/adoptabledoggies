@@ -65,17 +65,19 @@ class DataViz extends React.Component {
           .attr("y", (d, i) => h - (10 * d) - 3)
   }
 
-  cleanData = (raw_data) =>{
-   // console.log(raw_data)
-    raw_data.data.data.map((x) => {
-        x.map((item) => {console.log(item)})
-    })
-  }
+  renderItem = (dog, index) =>{
+      console.log(dog)
+        return(
+            <div>
+                <h1>{dog[1]} :{dog[2]}</h1>
+            </div>
+        )
+}
         
   render(){
     return ( <div>
         {this.state.loading ? null : 
-        this.cleanData(this.state.data)
+        this.state.data.data.data.map((dog, index) => this.renderItem(dog, index))
         }
         </div>
     )

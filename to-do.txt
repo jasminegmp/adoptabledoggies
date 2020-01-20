@@ -1,5 +1,6 @@
 Open
 - Get all zipcodes of SoCal data (90001 - 93199)
+    - Still need to grab 92267 - 92399
 - Get all zipcodes of Central california
 - Get all zipcodes of NorCal data
 - Get rest of California data
