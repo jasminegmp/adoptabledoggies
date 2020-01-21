@@ -1,20 +1,14 @@
 Open
-- Get all zipcodes of SoCal data (90001 - 93199)
-    - Still need to grab 92267 - 92399
-- Get all zipcodes of Central california
-- Get all zipcodes of NorCal data
-- Get rest of California data
 - append all retrieved dataframes into one dataframe
-
-- one hot encoding on dog breeds (keep in mind imbalance)
-- check results on random forest classifier on all categorical attributes
-    - make sure categorical data is true and False
-    - make sure ordinal values are 1,2,3,4
-    
 - Figure out translate data mining results into D3
 - Interface data mining results with Flask
 - Interface Flask with React
 - Host on Heroku
+- one hot encoding on dog breeds (keep in mind imbalance)
+- check results on random forest classifier on all categorical attributes
+    - make sure categorical data is true and False
+    - make sure ordinal values are 1,2,3,4
+
 
 Done
 - Create script to call pet finder API from list of california zipcode and save data as dataframes
@@ -45,3 +39,4 @@ Done
                     oob_score=False,
                     random_state=random_state,
                     verbose=0, warm_start=False)
+- Get all zipcodes of SoCal data (90001 - 93199)

@@ -1,8 +1,9 @@
 import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
+import BreedVisualization from '../BreedVisualization/index';
 
-class DataViz extends React.Component {
+class GetBreedData extends React.Component {
 
     constructor(props) {
         super(props);
@@ -76,12 +77,12 @@ class DataViz extends React.Component {
         
   render(){
     return ( <div>
-        {this.state.loading ? null : 
-        this.state.data.data.data.map((dog, index) => this.renderItem(dog, index))
+        {this.state.loading ? null : <BreedVisualization data = {this.state.data}/>
+        //this.state.data.data.data.map((dog, index) => this.renderItem(dog, index))
         }
         </div>
     )
   }
   }
       
-  export default DataViz;
+  export default GetBreedData;
