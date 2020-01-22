@@ -24,7 +24,7 @@ def get_data_query():
     chart_data = df.to_dict(orient='records')
     chart_data = json.dumps(chart_data, indent=2)
     data = {'chart_data': chart_data}
-    df =  df.to_json(orient='split')
+    df =  df.to_json(orient='records' )
     return df
  
 
