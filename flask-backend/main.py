@@ -23,6 +23,40 @@ def write_pkl(df, w_filename):
 def write_csv(df, w_filename):
      df.to_csv(w_filename + '.csv', index=False, encoding='utf-8')
 
+def list_of_breeds(pkl_filename, w_filename):
+    print "Getting list of available breeds according to data mined..."
+
+    # Pull data from .pkl files
+    breed_df = read_pkl(pkl_filename, ['breeds.primary', 'breeds.secondary'])
+
+    # append breed primary and secondary
+    breed_df['breeds.primary'].append(breed_df['breeds.secondary']).reset_index(drop=True)
+    del breed_df['breeds.secondary']
+
+    # Removing all duplicate rows
+    breed_df = breed_df.drop_duplicates(subset ="breeds.primary", keep = 'first')
+
+    #sort by breed
+    breed_df = breed_df.sort_values(by=['breeds.primary'], ascending=True)
+
+    write_pkl(breed_df, w_filename)
+    write_csv(breed_df, w_filename)
+
+def list_of_zipcodes(pkl_filename, w_filename):
+    print "Getting list of availalbe zipcodes according to data mined..."
+
+    # Pull data from .pkl files
+    zipcode_df = read_pkl(pkl_filename, ['contact.address.postcode'])
+
+    # Removing all duplicate rows
+    zipcode_df = zipcode_df.drop_duplicates(subset ="contact.address.postcode", keep = 'first')
+
+    #sort by zipcode
+    zipcode_df = zipcode_df.sort_values(by=['contact.address.postcode'], ascending=True)
+
+    write_pkl(zipcode_df, w_filename)
+    write_csv(zipcode_df, w_filename)
+
 def get_breed_count(r_filename, w_filename):
     print "Getting breed count..."
 
@@ -135,10 +169,10 @@ def get_data_specific_zipcode(zipcode):
 
 def append_dataframes(w_filename):
     df = DataFrame()
-    for filename in os.listdir("./test_pkl"):
+    for filename in os.listdir("./zipcode_pkl"):
         if filename.endswith(".pkl"):
             print filename
-            read_df = pd.read_pickle("./test_pkl/" + filename)
+            read_df = pd.read_pickle("./zipcode_pkl/" + filename)
             df = df.append([read_df])
 
     # Removing all duplicate rows
@@ -174,8 +208,13 @@ def input_script():
 
 
 #get_data_specific_zipcode(90015)
-#df = append_dataframes("90001_90083")
+#df = append_dataframes("socal_pkl")
 #get_categorical_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_categorical")
 #get_data("./90001_90083_test/90001_90083", "./90001_90083_test/90001_90083_nominal")
 
-input_script()
+#list_of_zipcodes("./storage/socal_pkl", "./storage/zipcodes")
+#list_of_breeds("./storage/socal_pkl", "./storage/breeds")
+
+#unpickled_zipcodes = pd.read_pickle("zipcodes.pkl")
+#console.log(unpickled_zipcodes)
+#input_script()
