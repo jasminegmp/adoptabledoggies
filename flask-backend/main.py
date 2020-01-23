@@ -182,6 +182,26 @@ def append_dataframes(w_filename):
     print df
     return df
 
+def datamine_zipcode(zipcode):
+    print "Getting df for " + zipcode
+
+    # Pull data from main pkl file
+    df = read_pkl("./storage/socal_pkl", ['breeds.primary', 'breeds.secondary', 'age', 'size', 'contact.address.postcode', 'gender'])
+
+    df = df.loc[df['contact.address.postcode'] == zipcode]
+
+    write_pkl(df, "./storage/" + zipcode)
+    write_csv(df,  "./storage/" + zipcode)
+    
+def iterate_zipcodes():
+    print "Getting zipcodes."
+
+    # Pull data from .pkl files
+    zipcode_df = read_pkl('./storage/zipcodes', ['contact.address.postcode'])
+    
+    for index, row in zipcode_df.iterrows():
+        print(row['contact.address.postcode'])
+        datamine_zipcode(str(row['contact.address.postcode']))
     
 def input_script():
     option = input("1. Grab Data\n2. get count\n3. Random forest\n4. Test for D3")
@@ -218,3 +238,6 @@ def input_script():
 #unpickled_zipcodes = pd.read_pickle("zipcodes.pkl")
 #console.log(unpickled_zipcodes)
 #input_script()
+
+#datamine_zipcode(90001)
+iterate_zipcodes()
