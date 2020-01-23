@@ -1,8 +1,10 @@
 import json
 import flask
 import pandas as pd
+import os
 
 app = flask.Flask("__main__")
+
 
 @app.route("/")
 def index():
@@ -20,6 +22,12 @@ def get_data_query():
     data = {'chart_data': chart_data}
     df =  df.to_json(orient='records' )
     return df
- 
+
+@app.route("/zipcode-data", methods = ['POST'])
+def get_zipcode_query():
+    filename = os.path.join(app.static_folder, 'storage', 'ca_california_zip_codes_geo.min.json')
+    df = pd.read_json(filename)
+    df =  df.to_json(orient='records' )
+    return df
 
 app.run(debug=True)
