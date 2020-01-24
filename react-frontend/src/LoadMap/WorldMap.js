@@ -14,7 +14,6 @@ class USMap extends Component {
         this.state = {
             height: 600,
             width: 960,
-            counties: this.props.counties,
             loading: true
         };
     }
@@ -30,7 +29,7 @@ class USMap extends Component {
             .attr("height", height)
             .style("border", "1px solid black");
 
-        d3.json("/static/storage/10m.json")
+        d3.json("/static/storage/counties-albers-10m.json")
         .then(function(us){
             console.log(us)
             // Append empty placeholder g element to the SVG

@@ -10,8 +10,7 @@ class LoadMap extends React.Component {
       super(props);
       
       this.state = {
-        loading: this.props.loading,
-        zipcodedata: this.props.zipcodedata
+        loading: this.props.loading
       };
     }
   
@@ -20,7 +19,7 @@ class LoadMap extends React.Component {
       return (
           <div>
               hi
-              <USMap counties={this.state.zipcodedata}/>
+              <USMap/>
           </div>
       );
     }

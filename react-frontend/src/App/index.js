@@ -17,9 +17,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
     var self = this;
-      axios.post('http://127.0.0.1:5000/zipcode-data')
+      axios.post('http://127.0.0.1:5000/counties')
           .then(function(data){
               //console.log(response);
               self.setState({zipcodedata: data});
@@ -39,7 +38,7 @@ class App extends React.Component {
 
       <Router>
       <Switch>
-          <Route exact path='/' render={() => <Landing zipcodedata = {this.state.zipcodedata} />}/>
+          <Route exact path='/' render={() => <Landing/>}/>
           {/*<Route exact path='/query' component={GetBreedData}/>*/}
       </Switch>
       </Router>

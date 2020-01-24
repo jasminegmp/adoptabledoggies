@@ -7,21 +7,11 @@ import {Link, withRouter} from 'react-router-dom';
 
 class Landing extends React.Component {
   
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      loading: this.props.loading,
-      zipcodedata: this.props.zipcodedata
-    };
-  }
-
 
   render() {
     return (
         <div>
-            <LoadMap zipcodedata = {this.state.zipcodedata}/>
-            {/*<button><Link to='/zipcode'>Get Zipcode</Link></button>*/}
+            <LoadMap/>
         </div>
     );
   }
