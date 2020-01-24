@@ -12,8 +12,8 @@ class USMap extends Component {
         super(props);
         
         this.state = {
-            height: 800,
-            width: 800,
+            height: 600,
+            width: 960,
             counties: this.props.counties,
             loading: true
         };
@@ -30,34 +30,26 @@ class USMap extends Component {
             .attr("height", height)
             .style("border", "1px solid black");
 
-        d3.json('https://gist.githubusercontent.com/jdev42092/5c285c4a3608eb9f9864f5da27db4e49/raw/a1c33b1432ca2948f14f656cc14c7c7335f78d95/boston_neighborhoods.json')
-        .then(function(data){
-            console.log(data)
+        d3.json("/static/storage/10m.json")
+        .then(function(us){
+            console.log(us)
             // Append empty placeholder g element to the SVG
             // g will contain geometry elements
             let g = svg.append( "g" );
-    
-            // define math projection a.k.a where it starts
-            let usProjection = d3.geoAlbers()
-                .scale( 190000 )
-                .rotate( [71.057,0] )
-                .center( [0, 42.313] )
-                .translate( [width/2,height/2] );
-    
+
             // Create GeoPath function that uses built-in D3 functionality to turn
             // lat/lon coordinates into screen coordinates
-            let us_geoPath = d3.geoPath()
-                .projection( usProjection );
+            let us_geoPath = d3.geoPath();
             
     
             // Classic D3... Select non-existent elements, bind the data, append the elements, and apply attributes
-            g.selectAll( "path" )
-                .data( data.features )
-                .enter()
-                .append( "path" )
-                .attr( "fill", "#ccc" )
-                .attr( "stroke", "#333")
-                .attr( "d", us_geoPath );
+            g.selectAll("path")
+                .data(topojson.feature(us, us.objects.counties).features) // Bind TopoJSON data elements
+            // pass through what objects you want to use -- in this case we are doing county lines
+                .enter().append("path")
+                .attr("d", us_geoPath)
+                .style("fill", "white")
+                .style("stroke", "black");
     
         })
         

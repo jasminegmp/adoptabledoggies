@@ -26,7 +26,7 @@ def get_data_query():
 # https://gist.github.com/threestory/ed0f322d7bb2e3be8ded
 @app.route("/zipcode-data", methods=['POST', 'GET'])
 def get_zipcode_query():
-    return "<a href=%s>file</a>" % url_for('static/storage', filename='counties-albers-10m.json')
+    return "<a href=%s>file</a>" % url_for('static/storage', filename='10m.json')
 
 # https://gist.github.com/threestory/ed0f322d7bb2e3be8ded
 @app.route("/cb_2014_us_county_5m.json", methods = ['POST'])
