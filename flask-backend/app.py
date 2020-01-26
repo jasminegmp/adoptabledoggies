@@ -32,4 +32,6 @@ def get_zipcode_query():
     df =  df.to_json(orient='records' )	
     return df
 
+
+
 app.run(debug=True)

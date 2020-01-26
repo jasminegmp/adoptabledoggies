@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { geoMercator, geoPath } from 'd3-geo'
 import * as d3 from 'd3';
-import * as d3geo from 'd3-geo';
 import axios from 'axios';
 import * as topojson from "topojson";
 import './USMap.scss';
@@ -19,7 +18,61 @@ class USMap extends Component {
         };
     }
 
+    // http://bl.ocks.org/threestory/ed0f322d7bb2e3be8ded
     componentDidMount(){
+        const {height, width, counties, loading} = this.state;
+			var w = width;
+			var h = height;
+
+			//Define map projection
+			var projection = d3.geoMercator()
+            .center([ -120, 37 ])
+            .translate([ w/2, h/2 ])
+            .scale([ w*3.3 ]);
+
+			var path = d3.geoPath().projection(projection);
+			
+
+			//Create SVG
+			var svg = d3.select(this.refs.canvas)
+						.append("svg")
+						.attr("width", w)
+                        .attr("height", h)
+                        .style("border", "1px solid black");
+
+			//Load in GeoJSON data
+			d3.json("http://127.0.0.1:5000/static/storage/cb_2014_us_county_5m.json").then(function(json) {
+                console.log(json);
+
+
+				//Bind data and create one path per GeoJSON feature
+				svg.selectAll("path")
+					.data(json.features)
+					.enter()
+					.append("path")
+					.attr("d", path)
+				   	.on("mouseover", function(d){
+                        console.log(d.properties.NAME)
+						var xPosition = w/2 + 150;
+						var yPosition = h/2;
+// 						var xPosition = parseFloat(path.centroid(this).attr("cx"));
+// 						var yPosition = parseFloat(path.centroid(this).attr("cy"));
+                        d3.select("#tooltip")
+                            .style("left", xPosition + "px")
+                            .style("top", yPosition + "px");
+                        d3.select("#county")
+						    .text(d.properties.NAME);
+						d3.select("#tooltip")
+						    .classed("hidden", false);
+						})
+                    .on("mouseout", function(){
+                    d3.select("#tooltip").classed("hidden", true);
+                    });
+		
+			});
+    }
+
+    componentdfdfDidMount(){
         const {height, width, counties, loading} = this.state;
 
         //https://bl.ocks.org/mbostock/4707858
@@ -62,13 +115,54 @@ class USMap extends Component {
                 .datum(california)
                 .attr("class", "feature")
                 .attr("d", us_geoPath);
-          
-            svg.append("path")
-                .datum(topojson.mesh(us, us.objects.cb_2015_california_county_20m, function(a, b) { return a !== b; }))
-                .attr("class", "mesh")
-                .attr("d", us_geoPath);
+/*
+             // "land" from merged counties
+            const land = svg.append("g")
+            .attr("id", "land")
+            .append("path")
+            .datum(landArea)
+            .attr("fill", "white")
+            .attr("stroke-width", 1.25)
+            .attr("stroke", 'white')
+            .attr("stroke-line-join", "round")
+            .attr("d", path)
 
-            // county boundaries
+            const countiesGroup = svg.append("g").attr("id", "county-boundaries")
+               
+            countiesGroup.selectAll('.county')
+            .data(countyFeats.features)
+            .enter()
+            .append('path')
+            .attr("stroke-width", 1.25)
+            .attr("stroke", 'white')
+            .attr('d', path)
+            .attr("fill", d => data.get(d.properties.GEOID) ? color(data.get(d.properties.GEOID)) : "#eee")    
+            .on('mouseover', mouseover)
+            .on('mouseout', mouseout)*/
+
+            svg.selectAll(".county")
+                //.data(countyFeats.features)
+                .enter()
+                .append("path")
+                .attr("stroke-width", 1.25)
+                .attr("stroke", 'white')
+                .attr('d', us_geoPath) 
+                .on("mouseover", function (d){
+                    console.log("Hovered", d);
+                    svg.transition()    
+                        .duration(200)    
+                        .style("opacity", .9);    
+                    svg.html(california.get(d.properties.GEOID))  
+                        .style("left", (d3.event.pageX) + "px")   
+                        .style("top", (d3.event.pageY - 28) + "px");  
+                })
+                .on("mouseout", function (d){
+                    svg.transition()    
+                        .duration(500)    
+                        .style("opacity", 0); 
+                });
+
+           /* // county boundaries
             const countiesGroup = svg.append("path").attr("id", "county-boundaries")
             
             countiesGroup.selectAll('.county')
@@ -78,6 +172,17 @@ class USMap extends Component {
                 .attr("stroke-width", 1.25)
                 .attr("stroke", 'white')
                 .attr('d', us_geoPath)
+                .on("mouseover", function (d){
+                    console.log("Hovered");
+                    svg.html("County ID "); 
+                })
+                .on("mouseout", function (d){
+                    svg.transition()    
+                        .duration(500)    
+                        .style("opacity", 0); 
+                });*/
+                
+
                 
 
         })
@@ -105,7 +210,10 @@ class USMap extends Component {
     
 
     render() {
-        return <div ref="canvas"></div>
+        return( 
+        <div><div ref="canvas"></div>
+            <p>County: <span id="county">County Name</span></p>
+        </div>)
     }
 }
 export default USMap

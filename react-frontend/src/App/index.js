@@ -12,7 +12,8 @@ class App extends React.Component {
     
     this.state = {
       loading: true,
-      zipcodedata: null
+      zipcodedata: null,
+      caData: null
     };
   }
 
