@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import * as d3geo from 'd3-geo';
 import axios from 'axios';
 import * as topojson from "topojson";
+import './USMap.scss';
 
 
 
@@ -21,6 +22,7 @@ class USMap extends Component {
     componentDidMount(){
         const {height, width, counties, loading} = this.state;
 
+        //https://bl.ocks.org/mbostock/4707858
 
         // create SVG
         const svg = d3.select(this.refs.canvas)
@@ -29,8 +31,16 @@ class USMap extends Component {
             .attr("height", height)
             .style("border", "1px solid black");
 
-        d3.json("http://127.0.0.1:5000/static/storage/counties-albers-10m.json")
+        
+        d3.json("http://127.0.0.1:5000/static/storage/us.json")
         .then(function(us){
+
+
+                // Create a unit projection.
+            var projection = d3.geoAlbers()
+                .scale(1)
+                .translate([0, 0]);
+
             console.log(us)
             // Append empty placeholder g element to the SVG
             // g will contain geometry elements
@@ -38,18 +48,40 @@ class USMap extends Component {
 
             // Create GeoPath function that uses built-in D3 functionality to turn
             // lat/lon coordinates into screen coordinates
-            let us_geoPath = d3.geoPath();
-            
-    
-            // Classic D3... Select non-existent elements, bind the data, append the elements, and apply attributes
-            g.selectAll("path")
-                .data(topojson.feature(us, us.objects.counties).features) // Bind TopoJSON data elements
-            // pass through what objects you want to use -- in this case we are doing county lines
-                .enter().append("path")
-                .attr("d", us_geoPath)
-                .style("fill", "white")
-                .style("stroke", "black");
-    
+            let us_geoPath = d3.geoPath().projection(projection);
+
+            var states = topojson.feature(us, us.objects.states),
+                state = states.features.filter(function(d) { return d.id === 6; })[0];
+
+            // Compute the bounds of a feature of interest, then derive scale & translate.
+            var b = us_geoPath.bounds(state),
+                s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+                t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+            // Update the projection to use computed scale & translate.
+            projection
+                .scale(s)
+                .translate(t);
+                
+            svg.append("path")
+                .datum(states)
+                .attr("class", "feature")
+                .attr("d", us_geoPath);
+          
+            svg.append("path")
+                .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+                .attr("class", "mesh")
+                .attr("d", us_geoPath);
+
+            svg.append("path")
+                .datum(topojson.mesh(us, us.objects.counties))
+                .attr("class", "mesh")
+                .attr("d", us_geoPath);
+          
+            svg.append("path")
+                .datum(state)
+                .attr("class", "outline")
+                .attr("d", us_geoPath);
         })
         
 
