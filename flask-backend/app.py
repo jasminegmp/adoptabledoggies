@@ -27,10 +27,6 @@ def get_data_query():
 # https://gist.github.com/threestory/ed0f322d7bb2e3be8ded
 @app.route("/counties", methods=['POST'])
 def get_zipcode_query():
-    return "<a href=%s>file</a>" % url_for('static/storage', filename='counties-albers-10m.json')
-
-@app.route("/cb_2014_us_county_5m.json", methods = ['POST'])	
-def get_zipcode_query():	
     filename = os.path.join(app.static_folder, 'storage', 'cb_2014_us_county_5m.json')	
     df = pd.read_json(filename)	
     df =  df.to_json(orient='records' )	
