@@ -255,6 +255,19 @@ def map_zipcode_to_county(r_folder, w_folder):
 
 
 
+def integrate_counties(folder_location, county_name):
+    print "Getting all zipcodes in county."
+    pkl_files = [f for f in os.listdir(folder_location) if f.endswith('.pkl')]
+    county_df = pd.DataFrame()
+    for f in pkl_files:
+        print f
+        df = pd.read_pickle(folder_location + f)
+        county_df = pd.concat([county_df, df])
+    #print county_df
+    write_csv(county_df, folder_location + county_name)
+    
+
+
 
 
 
@@ -273,3 +286,5 @@ def map_zipcode_to_county(r_folder, w_folder):
 #datamine_zipcode(90001)
 #iterate_zipcodes()
 #map_zipcode_to_county("./cleaned_zipcode_pkl", "./cleaned_county_csv")
+
+integrate_counties("./cleaned_county_csv/Ventura/", "Ventura")
