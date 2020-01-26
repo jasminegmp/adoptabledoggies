@@ -32,29 +32,24 @@ class USMap extends Component {
             .style("border", "1px solid black");
 
         
-        d3.json("http://127.0.0.1:5000/static/storage/us.json")
+        d3.json("http://127.0.0.1:5000/static/storage/california_06_counties.json")
         .then(function(us){
 
 
-                // Create a unit projection.
+            // Create a unit projection.
             var projection = d3.geoAlbers()
                 .scale(1)
                 .translate([0, 0]);
 
             console.log(us)
-            // Append empty placeholder g element to the SVG
-            // g will contain geometry elements
-            let g = svg.append( "g" );
-
             // Create GeoPath function that uses built-in D3 functionality to turn
             // lat/lon coordinates into screen coordinates
             let us_geoPath = d3.geoPath().projection(projection);
 
-            var states = topojson.feature(us, us.objects.states),
-                state = states.features.filter(function(d) { return d.id === 6; })[0];
+            var california = topojson.feature(us, us.objects.cb_2015_california_county_20m)
 
             // Compute the bounds of a feature of interest, then derive scale & translate.
-            var b = us_geoPath.bounds(state),
+            var b = us_geoPath.bounds(california),
                 s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
                 t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
 
@@ -64,24 +59,27 @@ class USMap extends Component {
                 .translate(t);
                 
             svg.append("path")
-                .datum(states)
+                .datum(california)
                 .attr("class", "feature")
                 .attr("d", us_geoPath);
           
             svg.append("path")
-                .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+                .datum(topojson.mesh(us, us.objects.cb_2015_california_county_20m, function(a, b) { return a !== b; }))
                 .attr("class", "mesh")
                 .attr("d", us_geoPath);
 
-            svg.append("path")
-                .datum(topojson.mesh(us, us.objects.counties))
-                .attr("class", "mesh")
-                .attr("d", us_geoPath);
-          
-            svg.append("path")
-                .datum(state)
-                .attr("class", "outline")
-                .attr("d", us_geoPath);
+            // county boundaries
+            const countiesGroup = svg.append("path").attr("id", "county-boundaries")
+            
+            countiesGroup.selectAll('.county')
+                .data(us.objects.cb_2015_california_county_20m)
+                .enter()
+                .append('path')
+                .attr("stroke-width", 1.25)
+                .attr("stroke", 'white')
+                .attr('d', us_geoPath)
+                
+
         })
         
 
