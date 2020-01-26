@@ -1,11 +1,11 @@
 Open
+- Get breed info given county
 - Figure out translate data mining results into D3
-    - Map display with zipcode
+    - Map hover
     - Integrate breed data with map display
 - Integrate dog SVG visualizations
-- Interface data mining results with Flask
-- Interface Flask with React
 - Host on Heroku
+IF TIME:
 - one hot encoding on dog breeds (keep in mind imbalance)
 - check results on random forest classifier on all categorical attributes
     - make sure categorical data is true and False
@@ -41,6 +41,8 @@ Done
                     oob_score=False,
                     random_state=random_state,
                     verbose=0, warm_start=False)
+- Interface data mining results with Flask
+- Interface Flask with React
 - Get all zipcodes of SoCal data (90001 - 93199)
 - Figure out translate data mining results into D3
     - Breed data display
@@ -49,3 +51,8 @@ Done
     - Get list of availalbe zipcodes according to data mined
     - Get list of available breeds according to data mined
     - Get data organized such that one giant DF, query just breed, gender, age, size info PER zipcode
+- Figure out translate data mining results into D3
+    - Map display with zipcode
+- Data mine zipcode to associate with county and make it available on storage
+
+Attrition: https://simplemaps.com/data/us-zips

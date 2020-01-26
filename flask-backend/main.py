@@ -10,6 +10,8 @@ import pickle
 import numpy as np
 from time import sleep
 import os
+import json
+
 
 def read_pkl(r_filename, columns):
     # Pull data from .pkl files
@@ -225,6 +227,35 @@ def input_script():
     if (option == 3):
         random_forest_feature_importance("./90001_90083_test/90001_90083_nominal", "./90001_90083_test/90001_90083_nominal_results")
 
+# map zipcodes to counties and create csv for each county
+def map_zipcode_to_county(r_folder, w_folder):
+    print "Getting zipcodes available."
+
+    # Pull data from .pkl files
+    zipcode_df = read_pkl(r_folder+'/zipcodes', ['contact.address.postcode'])
+    
+    # grab just california zipcodes and its county name
+    data = pd.read_csv(r_folder + "/uszips.csv")
+    df = data[['zip','state_id', 'county_name']]
+    ca_df = df.loc[df['state_id'] == 'CA']
+    #print ca_df
+
+    # loop through each zipcode_df and map a county_name
+    for col in zipcode_df:
+        if (col == 'contact.address.postcode'):
+            for i, row_value in ca_df['zip'].iteritems():
+                print row_value, ca_df['county_name'][i]
+                # find open matching pkl file
+                if os.path.isfile(r_folder + "/" + str(row_value)+ ".pkl"):
+                    match_zipcode_df = read_pkl(r_folder + "/" + str(row_value), ['breeds.primary', 'breeds.secondary', 'age', 'size', 'contact.address.postcode', 'gender'])
+                    # add a county_name to match_zipcode_df
+                    match_zipcode_df["county_name"] = ca_df['county_name'][i]
+                    write_pkl(match_zipcode_df, w_folder + "/" + str(ca_df['county_name'][i]) + "/" + str(row_value))
+                    write_csv(match_zipcode_df, w_folder + "/" + str(ca_df['county_name'][i]) + "/" + str(row_value))
+
+
+
+
 
 
 #get_data_specific_zipcode(90015)
@@ -240,4 +271,5 @@ def input_script():
 #input_script()
 
 #datamine_zipcode(90001)
-iterate_zipcodes()
+#iterate_zipcodes()
+#map_zipcode_to_county("./cleaned_zipcode_pkl", "./cleaned_county_csv")
