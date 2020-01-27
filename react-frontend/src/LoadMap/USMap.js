@@ -42,7 +42,6 @@ class USMap extends Component {
 			d3.json("http://127.0.0.1:5000/static/storage/cb_2014_us_county_5m.json").then(function(json) {
                 //console.log(json);
 
-
 				//Bind data and create one path per GeoJSON feature
 				svg.selectAll("path")
 					.data(json.features)
@@ -50,16 +49,22 @@ class USMap extends Component {
 					.append("path")
 					.attr("d", path)
 				   	.on("mouseover", function(d){
-                        //console.log(d.properties.NAME)
-                        d3.select("#county")
-						    .text(d.properties.NAME);
-						d3.select("#tooltip")
-                            .classed("hidden", false);
-                        this.setState({county: d.properties.NAME})
-                        })
-                        
-                    .on("mouseout", function(){
+                           console.log(d.properties.NAME)
+                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
+                            //console.log(d.properties.NAME)
+                            d3.select("#county")
+                                .text(d.properties.NAME);
+                            d3.select("#tooltip")
+                                .classed("hidden", false);
+                            d3.select(this).style("fill", "#2a9d8f");
+                        }
+                        else{
+                            d3.select(this).style("fill", "#264653");
+                        }
+                    })  
+                    .on("mouseout", function(d){
                     d3.select("#tooltip").classed("hidden", true);
+                    d3.select(this).style("fill", "#264653");
                     
             });
                 

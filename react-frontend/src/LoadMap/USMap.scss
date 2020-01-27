@@ -1,3 +1,5 @@
+@import '../foundation';
+
 body {
   margin: 0;
   font-family: "proxima-nova", "Source Sans Pro", sans-serif;
@@ -22,36 +24,27 @@ p {
   margin: 15px 0 10px 0;
 }
 
-a {
-  color: #799DCB;
-  text-decoration: none;
-  transition: color .3s, background .3s, border .3s;
-}
-a:hover {
-  color: #48494b;
-  background: #e7e8e9;
-}
-
 svg {
   background-color: white;
   padding-left: 20px;
 }
 
 path {
-  fill: #799dcb;
+  fill: $indigo;
   stroke: #fff;
   }
+  /*
 path:hover {
   fill:#48494b;
   cursor:pointer;
-}
+}*/
 
 #tooltip {
   width: 150px;
   height: auto;
   padding: 5px;
   background-color: #fff;
-  color: #000;
+  color: $indigo;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
