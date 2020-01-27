@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import * as d3 from 'd3';
 import axios from 'axios';
 import './USMap.scss';
+import CountyInfo from '../CountyInfo/index';
 
 
 class USMap extends Component {
@@ -12,15 +13,23 @@ class USMap extends Component {
             height: 600,
             width: 650,
             loading: true,
-            county: null
+            county: null,
+            prevCounty: null
         };
+    }
+
+    countyCalled = (county) =>{
+        this.setState({ prevCounty: this.state.county});
+        this.setState({county});
     }
 
     // http://bl.ocks.org/threestory/ed0f322d7bb2e3be8ded
     componentDidMount(){
         const {height, width, counties, loading} = this.state;
-			var w = width;
-			var h = height;
+
+        var that = this;
+        var w = width;
+        var h = height;
 
 			//Define map projection
 			var projection = d3.geoMercator()
@@ -63,6 +72,8 @@ class USMap extends Component {
                             d3.select("#tooltip")
                                 .classed("hidden", false);
                             d3.select(this).style("fill", "#e9c46a");
+                            that.countyCalled(d.properties.NAME);
+
                         }
                     })  
                     .on("mouseout", function(d){
@@ -72,7 +83,7 @@ class USMap extends Component {
                         else{
                             d3.select(this).style("fill", "#264653");
                         }
-                    }) 
+                    })
                     
             });
                 
@@ -84,6 +95,7 @@ class USMap extends Component {
         return( 
         <div><div ref="canvas"></div>
             <p>County: <span id="county">County Name</span></p>
+            {this.state.county !== null && this.state.prevCounty != this.state.county ? <CountyInfo county = {this.state.county}/> : null}
         </div>)
     }
 }
