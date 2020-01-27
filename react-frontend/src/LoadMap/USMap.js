@@ -10,7 +10,7 @@ class USMap extends Component {
         
         this.state = {
             height: 600,
-            width: 960,
+            width: 650,
             loading: true,
             county: null
         };
@@ -47,30 +47,37 @@ class USMap extends Component {
 					.data(json.features)
 					.enter()
 					.append("path")
-					.attr("d", path)
-				   	.on("mouseover", function(d){
-                           console.log(d.properties.NAME)
+                    .attr("d", path)
+                    //.attr("fill",function(d) {console.log(d.properties.NAME); if (d.properties.NAME === "Los Angeles") { console.log(d.properties.NAME);return "red"}})
+                    .style("fill", function(d){
+                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
+                            //console.log(d.properties.NAME)
+                            return "#2a9d8f"
+                        }
+                    })   
+                    .on("click", function(d){
                         if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
                             //console.log(d.properties.NAME)
                             d3.select("#county")
                                 .text(d.properties.NAME);
                             d3.select("#tooltip")
                                 .classed("hidden", false);
+                            d3.select(this).style("fill", "#e9c46a");
+                        }
+                    })  
+                    .on("mouseout", function(d){
+                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
                             d3.select(this).style("fill", "#2a9d8f");
                         }
                         else{
                             d3.select(this).style("fill", "#264653");
                         }
-                    })  
-                    .on("mouseout", function(d){
-                    d3.select("#tooltip").classed("hidden", true);
-                    d3.select(this).style("fill", "#264653");
+                    }) 
                     
             });
                 
 		
-			});
-    }
+	    }
 
 
     render() {
