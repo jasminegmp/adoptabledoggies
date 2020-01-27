@@ -8,7 +8,7 @@
 petfinder.env
 petfinder_curl_commands.text
 *.pkl
-*.csv
+
 *.pyc
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
@@ -36,4 +36,9 @@ yarn-debug.log*
 yarn-error.log*
 
 /templates
-/static
+/static/*
+*.csv/*
+!static/storage
+!static/storage/counties_data.csv
+!static/storage/breeds.csv
+!static/storage/zipcodes.csv
