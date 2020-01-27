@@ -266,7 +266,91 @@ def integrate_counties(folder_location, county_name):
     #print county_df
     write_csv(county_df, folder_location + county_name)
     
+# mine data based on county into a simple results page
+def get_breed_gender_age_size_per_county(f_name, county):
+    output_df = pd.DataFrame()
+    df = pd.read_csv(f_name)
 
+    ##### get breed distribution
+    breed_df = df
+    # append breed primary and secondary
+    # Pull data from .pkl files
+    unpickled_breeds = pd.read_pickle("breeds.pkl")
+
+    # add a count to breeds df
+    unpickled_breeds["count"] = 0
+
+    for col in breed_df:
+        if (col == 'breeds.primary' or col == 'breeds.secondary'):
+            for i, row_value in breed_df[col].iteritems():
+                if not(pd.isnull(row_value)):
+                    #print row_value
+                    unpickled_breeds['count'] += unpickled_breeds['name'].str.contains(row_value).astype(int)
+
+    unpickled_breeds = unpickled_breeds.sort_values(by=['count'], ascending=False)
+
+    #print unpickled_breeds
+    # only add top 3 breeds into df
+    output_df.at[0, 'county'] = county
+    output_df.at[0, 'breed_0'] = unpickled_breeds.iloc[0,1]
+    output_df.at[0, 'breed_1'] = unpickled_breeds.iloc[1,1]
+    output_df.at[0, 'breed_2'] = unpickled_breeds.iloc[2,1]
+
+    
+    #### get age distribution
+    age_count_df = df
+    unpickled_age = pd.DataFrame({'Senior': [0], 'Adult' : [0], 'Young' : [0], 'Baby': [0]})
+
+    for col in age_count_df:
+        if (col == 'age'):
+            for i, row_value in age_count_df[col].iteritems():
+                if (unpickled_age[row_value].name == row_value):
+                    unpickled_age[row_value] += 1
+
+    
+    #print unpickled_age
+    count =0
+    for col in unpickled_age.columns:
+        output_df.at[0, col] = unpickled_age.iloc[0,count]
+        count += 1
+
+    #### get size distribution
+    size_count_df = df
+    unpickled_size = pd.DataFrame({'Small': [0], 'Medium' : [0], 'Large' : [0], 'Extra Large': [0]})
+
+    for col in size_count_df:
+        if (col == 'size'):
+            for i, row_value in size_count_df[col].iteritems():
+                if (unpickled_size[row_value].name == row_value):
+                    unpickled_size[row_value] += 1
+
+    #print unpickled_age
+    count = 0
+    for col in unpickled_size.columns:
+        output_df.at[0, col] = unpickled_size.iloc[0,count]
+        count += 1
+
+
+    #### get gender distribution
+    gender_count_df = df
+    unpickled_gender = pd.DataFrame({'Male': [0], 'Female' : [0]})
+
+    for col in gender_count_df:
+        if (col == 'gender'):
+            for i, row_value in gender_count_df[col].iteritems():
+                if row_value == 'Male' or row_value == 'Female':
+                    #print row_value
+                    if (unpickled_gender[row_value].name == row_value):
+                        unpickled_gender[row_value] += 1
+
+    #print unpickled_age
+    count = 0
+    for col in unpickled_gender.columns:
+        output_df.at[0, col] = unpickled_gender.iloc[0,count]
+        count += 1
+
+    #print output_df
+    write_csv(output_df, county)
 
 
 
@@ -287,4 +371,5 @@ def integrate_counties(folder_location, county_name):
 #iterate_zipcodes()
 #map_zipcode_to_county("./cleaned_zipcode_pkl", "./cleaned_county_csv")
 
-integrate_counties("./cleaned_county_csv/Ventura/", "Ventura")
+#integrate_counties("./cleaned_county_csv/Ventura/", "Ventura")
+get_breed_gender_age_size_per_county("./cleaned_county_csv/San Bernardino.csv", 'San Bernardino')

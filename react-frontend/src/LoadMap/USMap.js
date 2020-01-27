@@ -11,7 +11,8 @@ class USMap extends Component {
         this.state = {
             height: 600,
             width: 960,
-            loading: true
+            loading: true,
+            county: null
         };
     }
 
@@ -50,19 +51,18 @@ class USMap extends Component {
 					.attr("d", path)
 				   	.on("mouseover", function(d){
                         //console.log(d.properties.NAME)
-						var xPosition = w/2 + 150;
-						var yPosition = h/2;
-                        d3.select("#tooltip")
-                            .style("left", xPosition + "px")
-                            .style("top", yPosition + "px");
                         d3.select("#county")
 						    .text(d.properties.NAME);
 						d3.select("#tooltip")
-						    .classed("hidden", false);
-						})
+                            .classed("hidden", false);
+                        this.setState({county: d.properties.NAME})
+                        })
+                        
                     .on("mouseout", function(){
                     d3.select("#tooltip").classed("hidden", true);
-                    });
+                    
+            });
+                
 		
 			});
     }
