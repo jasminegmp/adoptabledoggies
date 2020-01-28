@@ -18,6 +18,42 @@ class D3CountyViz extends React.Component {
     componentDidMount() {
 
         const {results, margin, width, height} = this.state;
+        this.drawPieChart(results.gender, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f']));
+        this.drawPieChart(results.age, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a', '#f4a261']));
+        this.drawPieChart(results.size, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a', '#f4a261']));
+        this.drawBreeds(results.breed, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a']));
+
+
+    }
+
+    drawBreeds(results){
+        var breed_dict = {
+            pitbull: ["Pit Bull Terrier", "American Staffordshire Terrier"],
+            yorkshire_terrier: ["Yorkshire Terrier"],
+            chihuahua: ["Chihuahua"],
+            jack_russell_terrier: ["Jack Russell Terrier"],
+            labrador_retriever: ["Black Labrador Retriever","Chocolate Labrador Retriever","Yellow Labrador Retriever"],
+            cocker_spaniel:["English Cocker Spaniel", "Cocker Spaniel"]
+          };
+
+        results.map(dog => {
+            console.log(dog);
+            Object.keys(breed_dict).forEach(
+                key =>
+                {
+                    breed_dict[key].map((item) => {
+                        if (item === dog){
+                            return console.log("FOUND", key)
+                        }
+                    })
+                }
+            )
+        })
+    }
+
+
+    drawPieChart(results, width, height, color) {
+
 
         // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
         let radius = Math.min(width, height) / 2 * 0.8;
@@ -31,8 +67,6 @@ class D3CountyViz extends React.Component {
         
         const g = svgCanvas.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
     
-        var color = d3.scaleOrdinal(['#e76f51','#2a9d8f']);
-    
         //console.log(results.gender)
         // Generate the pie
         var pie = d3.pie();
@@ -44,7 +78,7 @@ class D3CountyViz extends React.Component {
 
         // Create array of objects of search results to be used by D3
         var data = [];
-        Object.entries(results.gender).forEach(([key, value]) => {
+        Object.entries(results).forEach(([key, value]) => {
             console.log(key, value)
             data.push({
                 count: value,
