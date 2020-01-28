@@ -93,7 +93,7 @@ class USMap extends Component {
 
     render() {
         return( 
-        <div><div ref="canvas"></div>
+        <div><div class = "ca-map" ref="canvas"></div>
             <p>County: <span id="county">County Name</span></p>
             {this.state.county !== null && this.state.prevCounty != this.state.county ? <CountyInfo county = {this.state.county}/> : null}
         </div>)

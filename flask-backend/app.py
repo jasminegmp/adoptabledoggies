@@ -32,6 +32,13 @@ def get_zipcode_query():
     df =  df.to_json(orient='records' )	
     return df
 
+# https://gist.github.com/threestory/ed0f322d7bb2e3be8ded
+@app.route("/counties_data", methods=['POST'])
+def get_county_query():
+    filename = os.path.join(app.static_folder, 'storage', 'counties_data.json')	
+    df = pd.read_json(filename)	
+    df =  df.to_json(orient='records' )	
+    return df
 
 
 app.run(debug=True)
