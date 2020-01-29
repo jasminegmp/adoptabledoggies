@@ -59,13 +59,13 @@ class USMap extends Component {
                     .attr("d", path)
                     //.attr("fill",function(d) {console.log(d.properties.NAME); if (d.properties.NAME === "Los Angeles") { console.log(d.properties.NAME);return "red"}})
                     .style("fill", function(d){
-                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
+                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Santa Barbara" ||  d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego"  || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
                             //console.log(d.properties.NAME)
                             return "#2a9d8f"
                         }
                     })   
                     .on("click", function(d){
-                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
+                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Santa Barbara" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
                             //console.log(d.properties.NAME)
                             d3.select("#county")
                                 .text(d.properties.NAME);

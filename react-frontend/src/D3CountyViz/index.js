@@ -21,7 +21,7 @@ class D3CountyViz extends React.Component {
         this.drawPieChart(results.gender, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f']));
         this.drawPieChart(results.age, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a', '#f4a261']));
         this.drawPieChart(results.size, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a', '#f4a261']));
-        this.drawBreeds(results.breed, 500, 500, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a']));
+        this.drawBreeds(results.breed, 200, 200, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a']));
 
 
     }
@@ -75,38 +75,50 @@ class D3CountyViz extends React.Component {
                 }
             };
 
-        let dog;
+        let found_dog;
         results.map(dog => {
-            console.log(dog);
             Object.keys(breed_dict).forEach(
                 key =>
                 {
                     breed_dict[key].map((item) => {
                         if (item === dog){
-                            return console.log("FOUND", key)
-                            dog = key;
                             
+                            found_dog = key;
+                            
+                            let svgCanvas = d3.select(this.refs.canvas)
+                                .append("svg")
+                                .attr('viewBox','0 0 '+ Math.min(width,height)*2 +' '+ Math.min(width,height)*2 )
+                                .style("border", "1px solid black")
+                                .attr("width", width)
+                                .attr("height", height)
+                                .attr('transform', 'translate(0, 80)') // <---- here
+
+
+                            let dogPath = svgCanvas.append('path')
+                                .attr("d", breed_paths[found_dog].d)
+                                .style("stroke", breed_paths[found_dog].stroke)
+                                .style("fill", breed_paths[found_dog].fill)
+                               // .append("text").text(found_dog)
+                                
+                            console.log(dog)
+
+                            let text = svgCanvas.append('text')
+                                .text(function() {return String(dog)})
+                                .style("font-size", 25)
+                                .attr("fill", "black")
+                                .attr("transform", "translate(" + width/2 + ")")   
+                                .attr('x', width / 2)
+                                .attr('y', 380)
+                                .style("text-anchor", "middle");
+                                svgCanvas.transition()
+                                .duration(1000)
+                                .attr('transform', 'translate(0,0)');
                         }
                     })
                 }
             )
         })
-        const svgCanvas = d3.select(this.refs.canvas)
-        .append("svg")
-        .attr('viewBox','0 0 '+Math.min(width,height) +' '+Math.min(width,height) )
-        .style("border", "1px solid black")
-        .attr("width", width)
-        .attr("height", height)
-        .append('path')
-        .attr("d", breed_paths[dog].d)
-        .style("stroke", breed_paths[dog].stroke)
-        .style("fill", breed_paths[dog].fill);
-
         
-
-
-
-    
     }
 
 
@@ -165,7 +177,7 @@ class D3CountyViz extends React.Component {
         arcs.selectAll("path")
             .transition()
                 .delay(function(d, i) {
-                return i * 800;
+                return i * 1000;
                 })
                     .attrTween('d', function(d) {
             var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
