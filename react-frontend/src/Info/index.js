@@ -16,6 +16,9 @@ class Info extends React.Component {
             <p class = "info">
                 To create this map, I mined almost 200,000 datapoints throughout January 2020 using <a target="_blank" href = "https://www.petfinder.com/">Petfinder</a>'s API.
             </p>
+            <p class = "info">
+                To map counties to zipcodes, I ussed <a target="_blank" href = "https://simplemaps.com/data/us-zips">Simple Maps</a>.
+            </p>
             <Footer/>
         </div>
     );

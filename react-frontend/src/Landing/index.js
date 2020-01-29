@@ -13,7 +13,7 @@ class Landing extends React.Component {
           <div class = "info-background column info small-column">
             <Info/>
           </div>
-          <div class = "column large-column">
+          <div class = "map-background column large-column">
             <LoadMap/>
             </div>
         </div>

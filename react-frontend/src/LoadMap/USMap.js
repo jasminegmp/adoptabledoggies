@@ -10,11 +10,12 @@ class USMap extends Component {
         super(props);
         
         this.state = {
-            height: 600,
-            width: 650,
+            height: 550,
+            width: 550,
             loading: true,
             county: null,
-            prevCounty: null
+            prevCounty: null,
+            prevCountyObj: null
         };
     }
 
@@ -44,8 +45,7 @@ class USMap extends Component {
 			var svg = d3.select(this.refs.canvas)
 						.append("svg")
 						.attr("width", w)
-                        .attr("height", h)
-                        .style("border", "1px solid black");
+                        .attr("height", h);
 
 			//Load in GeoJSON data
 			d3.json("http://127.0.0.1:5000/static/storage/cb_2014_us_county_5m.json").then(function(json) {
@@ -71,18 +71,12 @@ class USMap extends Component {
                             d3.select("#tooltip")
                                 .classed("hidden", false);
                             d3.select(this).style("fill", "#e9c46a");
+                            d3.select(that.state.prevCountyObj).style("fill", "#2a9d8f");
                             that.countyCalled(d.properties.NAME);
+                            that.setState({prevCountyObj: this});
 
                         }
-                    })  
-                    .on("mouseout", function(d){
-                        if (d.properties.NAME === "Los Angeles" || d.properties.NAME === "Orange" || d.properties.NAME === "Ventura" || d.properties.NAME === "Imperial" || d.properties.NAME === "San Diego" || d.properties.NAME === "San Bernardino" || d.properties.NAME === "Riverside"){
-                            d3.select(this).style("fill", "#2a9d8f");
-                        }
-                        else{
-                            d3.select(this).style("fill", "#264653");
-                        }
-                    })
+                    }) 
                     
             });
                 
@@ -92,8 +86,9 @@ class USMap extends Component {
 
     render() {
         return( 
-        <div><div class = "ca-map" ref="canvas"></div>
-            <p>County: <span id="county">County Name</span></p>
+        <div>
+            <div class = "ca-map" ref="canvas"></div>
+            <h2 id="county"></h2>
             {this.state.county !== null && this.state.prevCounty != this.state.county ? <CountyInfo county = {this.state.county}/> : null}
         </div>)
     }

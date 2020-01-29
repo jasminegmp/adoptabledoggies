@@ -48,8 +48,8 @@ class D3CountyViz extends React.Component {
     
     this.state = {
       results: this.props.data,
-      height: 250,
-      width: 250,
+      height: 300,
+      width: 300,
       margin: {top: 5, right: 5, bottom: 5, left: 5}
     };
   }
@@ -83,10 +83,9 @@ class D3CountyViz extends React.Component {
                             
                             found_dog = key;
                             
-                            let svgCanvas = d3.select(this.refs.canvas)
+                            let svgCanvas = d3.select(this.refs.dogcanvas)
                                 .append("svg")
                                 .attr('viewBox','0 0 '+ Math.min(width,height)*2 +' '+ Math.min(width,height)*2 )
-                                .style("border", "1px solid black")
                                 .attr("width", width)
                                 .attr("height", height)
                                 .attr('transform', 'translate(0, 80)') // <---- here
@@ -102,8 +101,8 @@ class D3CountyViz extends React.Component {
 
                             let text = svgCanvas.append('text')
                                 .text(function() {return String(dog)})
-                                .style("font-size", 25)
-                                .attr("fill", "black")
+                                .style("font-size", 30)
+                                .attr("fill", "#264653")
                                 .attr("transform", "translate(" + width/2 + ")")   
                                 .attr('x', width / 2)
                                 .attr('y', 380)
@@ -129,7 +128,6 @@ class D3CountyViz extends React.Component {
         const svgCanvas = d3.select(this.refs.canvas)
             .append("svg")
             .attr('viewBox','0 0 '+Math.min(width,height) +' '+Math.min(width,height) )
-            .style("border", "1px solid black")
             .attr("width", width)
             .attr("height", height)
         
@@ -213,9 +211,11 @@ class D3CountyViz extends React.Component {
 
         legendG.append("text") // add the text
             .text(function(d){
-                return d.data.name + "  " + d.data.count;
+                return d.data.name + "  " + (d.data.count).toLocaleString();
             })
-            .style("font-size", 12)
+            .style("padding", 5)
+            .style("margin", 5)
+            .style("font-size", 14)
             .attr("y", 10)
             .attr("x", 11);
 
@@ -227,7 +227,11 @@ class D3CountyViz extends React.Component {
 
     render() {
         return (
-            <div ref="canvas"></div>
+                <div>
+                <div class = "row"><div ref="canvas"></div></div>
+                <h2>Most Common Breeds</h2>
+                <div class = "row"><div ref="dogcanvas"></div></div>
+            </div>
         );
     }
 }

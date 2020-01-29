@@ -14,6 +14,7 @@ $list: $light-indigo, $indigo;
     flex-wrap: wrap;
     width: 100%;
     height: 100%;
+    justify-content: center;
   }
 
 
@@ -21,7 +22,11 @@ $list: $light-indigo, $indigo;
     @include gradient(bottom, $list);
     color: $dark-white;
 }
-  
+ 
+.map-background{
+  color: $indigo;
+}
+
 .column {
     display: flex;
     flex-direction: column;
