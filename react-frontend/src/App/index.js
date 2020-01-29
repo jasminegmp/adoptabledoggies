@@ -1,7 +1,6 @@
 import React from 'react';
 import Landing from '../Landing/index';
 import Loader from '../Loader/index';
-import GetBreedData from '../GetBreedData/index';
 import axios from 'axios';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
@@ -12,8 +11,7 @@ class App extends React.Component {
     
     this.state = {
       loading: true,
-      zipcodedata: null,
-      caData: null
+      zipcodedata: null
     };
   }
 
@@ -40,7 +38,6 @@ class App extends React.Component {
       <Router>
       <Switch>
           <Route exact path='/' render={() => <Landing/>}/>
-          {/*<Route exact path='/query' component={GetBreedData}/>*/}
       </Switch>
       </Router>
     );

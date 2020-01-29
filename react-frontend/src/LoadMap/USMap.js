@@ -49,7 +49,6 @@ class USMap extends Component {
 
 			//Load in GeoJSON data
 			d3.json("http://127.0.0.1:5000/static/storage/cb_2014_us_county_5m.json").then(function(json) {
-                //console.log(json);
 
 				//Bind data and create one path per GeoJSON feature
 				svg.selectAll("path")
