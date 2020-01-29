@@ -1,4 +1,5 @@
 @import 'foundation';
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
     //font-family: 'Martel Sans', sans-serif;
     //font-family: 'Leckerli One', cursive;
@@ -9,14 +10,30 @@ html{
 }
 
 body{
+    text-align: center;
+    height: 100%;
     //border: dashed 10px red;
     font-family: 'PT Sans', sans-serif;
-    font-size: 40px;
-    text-transform: lowercase;
+    font-size: 16px;
+}
+
+#root{
+    height: 100%;
 }
 
 h1{
     text-align: center;
     font-size: 2rem;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
 }
 
+a{
+    color: $white;
+    text-decoration: none;
+}
+
+a:hover{
+    color: $dark-white;
+    text-decoration: none;
+}

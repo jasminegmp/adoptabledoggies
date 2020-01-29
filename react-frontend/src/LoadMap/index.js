@@ -18,7 +18,6 @@ class LoadMap extends React.Component {
     render() {
       return (
           <div>
-              hi
               <USMap/>
           </div>
       );
