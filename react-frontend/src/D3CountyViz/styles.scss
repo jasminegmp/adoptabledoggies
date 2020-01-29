@@ -13,3 +13,19 @@
     fill: teal;
     font-weight: bold;
 }
+
+#chart{
+    text-align: center;
+}
+
+.monthArc {
+    fill: white;
+    stroke: #AAAAAA;
+}
+
+.dataText {
+    z-index: 999;
+}
+.dataArc{
+    z-index: -10;
+}

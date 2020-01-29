@@ -123,7 +123,7 @@ class D3CountyViz extends React.Component {
 
 
         // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-        let radius = Math.min(width, height) / 2 * 0.8;
+        let radius = Math.min(width, height) / 3 * 0.8;
 
         const svgCanvas = d3.select(this.refs.canvas)
             .append("svg")
