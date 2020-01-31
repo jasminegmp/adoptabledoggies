@@ -5,8 +5,9 @@ import {withRouter} from 'react-router-dom';
 
 const Footer = () => {
     return(
-        <div class = "footer">
-            Data mined and visualized by <a class = "link-hover" target="_blank" href= "https://jasminegump.com/">Jasmine</a>.
+        <div className = "footer">
+            Data mined and visualized by <a className = "link-hover" href= "https://jasminegump.com/">Jasmine</a>. See it on <a className = "link-hover" href= "https://github.com/jasminegmp/adoptabledoggies">Github</a>. 
+            
         </div>
     )
 }

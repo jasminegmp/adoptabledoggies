@@ -17,16 +17,13 @@ class App extends React.Component {
 
   componentDidMount() {
     var self = this;
-      axios.post('http://127.0.0.1:5000/counties')
+      axios.get('https://api.jsonbin.io/b/5e34b7df3d75894195e28685')
           .then(function(data){
-              //console.log(response);
               self.setState({zipcodedata: data});
               self.setState({loading: false});
-      //Perform action based on response
       })
       .catch(function(error){
           console.log(error);
-      //Perform action based on error
       });
   }
   render() {

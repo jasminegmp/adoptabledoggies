@@ -41,6 +41,15 @@ let breed_paths = {
     }
 };
 
+let breed_dict = {
+    pitbull: ["Pit Bull Terrier", "American Staffordshire Terrier"],
+    yorkshire_terrier: ["Yorkshire Terrier"],
+    chihuahua: ["Chihuahua"],
+    jack_russell_terrier: ["Jack Russell Terrier"],
+    labrador_retriever: ["Black Labrador Retriever","Chocolate Labrador Retriever","Yellow Labrador Retriever"],
+    cocker_spaniel:["English Cocker Spaniel", "Cocker Spaniel"]
+  };
+
 class D3CountyViz extends React.Component {
 
   constructor(props) {
@@ -49,14 +58,13 @@ class D3CountyViz extends React.Component {
     this.state = {
       results: this.props.data,
       height: 300,
-      width: 300,
-      margin: {top: 5, right: 5, bottom: 5, left: 5}
+      width: 300
     };
   }
 
     componentDidMount() {
 
-        const {results, margin, width, height} = this.state;
+        const {results, width, height} = this.state;
         this.drawPieChart(results.gender, width, height, d3.scaleOrdinal(['#2a9d8f', '#e76f51']));
         this.drawPieChart(results.age, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a', '#f4a261']));
         this.drawPieChart(results.size, width, height, d3.scaleOrdinal(['#e76f51','#2a9d8f', '#e9c46a', '#f4a261']));
@@ -64,14 +72,7 @@ class D3CountyViz extends React.Component {
     }
 
     drawBreeds(results, width, height){
-        var breed_dict = {
-            pitbull: ["Pit Bull Terrier", "American Staffordshire Terrier"],
-            yorkshire_terrier: ["Yorkshire Terrier"],
-            chihuahua: ["Chihuahua"],
-            jack_russell_terrier: ["Jack Russell Terrier"],
-            labrador_retriever: ["Black Labrador Retriever","Chocolate Labrador Retriever","Yellow Labrador Retriever"],
-            cocker_spaniel:["English Cocker Spaniel", "Cocker Spaniel"]
-          };
+
 
         let found_dog;
         results.map(dog => {
@@ -88,16 +89,13 @@ class D3CountyViz extends React.Component {
                                 .attr('viewBox','0 0 '+ Math.min(width,height)*2 +' '+ Math.min(width,height)*2 )
                                 .attr("width", width)
                                 .attr("height", height)
-                                .attr('transform', 'translate(0, 80)') // <---- here
+                                .attr('transform', 'translate(0, 80)');
 
 
                             let dogPath = svgCanvas.append('path')
                                 .attr("d", breed_paths[found_dog].d)
                                 .style("stroke", breed_paths[found_dog].stroke)
-                                .style("fill", breed_paths[found_dog].fill)
-                               // .append("text").text(found_dog)
-                                
-                            console.log(dog)
+                                .style("fill", breed_paths[found_dog].fill);
 
                             let text = svgCanvas.append('text')
                                 .text(function() {return String(dog)})
@@ -133,7 +131,6 @@ class D3CountyViz extends React.Component {
         
         const g = svgCanvas.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
     
-        //console.log(results.gender)
         // Generate the pie
         var pie = d3.pie();
 
@@ -145,7 +142,7 @@ class D3CountyViz extends React.Component {
         // Create array of objects of search results to be used by D3
         var data = [];
         Object.entries(results).forEach(([key, value]) => {
-            console.log(key, value)
+            //console.log(key, value)
             data.push({
                 count: value,
                 name: key
@@ -153,8 +150,6 @@ class D3CountyViz extends React.Component {
  
         })
 
-
-        console.log(data)
         //Generate groups
         var arcs = g.selectAll("arc")
                     .data(pie(data.map(d => d.count)))
@@ -184,17 +179,9 @@ class D3CountyViz extends React.Component {
             });
             
 
-        const arcLabel =  d3.arc().innerRadius(radius).outerRadius(radius);
-            
-       /* arcs.append("text")
-            .attr("transform", function(d) { 
-                    return "translate(" + arcLabel.centroid(d) + ")"; 
-            })
-            .text(data.map(d => d.count));*/
-
         // again rebind for legend
         
-        let legendG = svgCanvas.selectAll(".legend") // note appending it to mySvg and not svg to make positioning easier
+        let legendG = svgCanvas.selectAll(".legend")
             .data(pie(data))
             .enter().append("g")
             .attr("transform", function(d,i){
@@ -218,19 +205,17 @@ class D3CountyViz extends React.Component {
             .style("font-size", 14)
             .attr("y", 10)
             .attr("x", 11);
-
     }
 
 
-    
 
 
     render() {
         return (
                 <div>
-                <div class = "row"><div ref="canvas"></div></div>
+                <div className = "row"><div ref="canvas"></div></div>
                 <h2>Most Common Breeds</h2>
-                <div class = "row"><div ref="dogcanvas"></div></div>
+                <div className = "row"><div ref="dogcanvas"></div></div>
             </div>
         );
     }

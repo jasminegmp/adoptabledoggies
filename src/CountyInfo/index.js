@@ -18,22 +18,18 @@ class CountyInfo extends React.Component {
 
   componentDidMount() {
     var self = this;
-      axios.post('http://127.0.0.1:5000/counties_data')
+      axios.get('https://api.jsonbin.io/b/5e34b84e50a7fe418c576743')
           .then(function(data){
-              //console.log(response);
               self.setState({countyData: data});
               self.extractData();
-              //self.setState({loading: false});
-      //Perform action based on response
       })
       .catch(function(error){
           console.log(error);
-      //Perform action based on error
       });
   }
 
   extractData = () =>{
-    const {countyData, county, loading, extractedCountyData} = this.state;
+    const {countyData, county} = this.state;
     countyData.data.map((item, index) => {
         if (item.county === county){
             this.setState({extractedCountyData: item, loading: false})

@@ -1,68 +1,61 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Adoptable Doggies
+To reveal the most common types of breeds and other information about dogs up for adoption, I analysed adoptable dogs in the counties of Southern California in January 2020.
+I mined almost 200,000 datapoints throughout January 2020 using Petfinder's API, then used D3 to display the results found.
 
-## Available Scripts
+## Technologies used
+* [React](https://reactjs.org/) for Javascript library
+* [Flask](https://www.palletsprojects.com/p/flask/) for web framework
+* [Pandas](https://pandas.pydata.org/) for data mining
+* [PetFinder API](https://www.petfinder.com/developers/) for data
+* [SimpleMaps](https://simplemaps.com/data/us-zips) to map zipcodes to counties
+* [D3](https://d3js.org/) for data visualization
+* [Heroku](https://heroku.com) for hosting
+* [SCSS](https://sass-lang.com/) for styling
+* [Visual Studio Code](https://code.visualstudio.com/) for coding
+* [Yarn](https://yarnpkg.com/) for package manager
 
-In the project directory, you can run:
 
-### `yarn start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Setup to Run Locally
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### install dependencies
+    * `yarn install`
+    * `pip install -r requirements.txt`
+    * `yarn add topojson`
+    * `yarn add d3`
 
-### `yarn test`
+### Run Development Local
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Start flask backend server
+    - `npm run serve`
+    - Optional: add env variable `DEV=True` for hot reloading on server
 
-### `yarn build`
+2. (In seperate tab): Start react dev server with hot reloader
+    `npm start`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Visit http://localhost:3000.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+    If you see, "data from the backend received," all is well.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Setup to Deploy To Heroku
 
-### `yarn eject`
+1. [Push your project to github](https://github.com/new)  
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. Create new app on heroku.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. (On heroku) Click "settings" tab
+    - add **nodejs** and **python** buildpacks. 
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+4. (on heroku) click "deploy" tab
+    - select "Connect on Github" for deployment method. 
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+5. Click "Deploy Branch" under "Manual deploy" row.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Other Credit
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* [Flask initial boiler plate help](https://github.com/DZGoldman/flask-react-minimal-boilerplate)
+* [D3 References](https://bl.ocks.org/)
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+ 

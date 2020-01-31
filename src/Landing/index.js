@@ -9,11 +9,11 @@ class Landing extends React.Component {
 
   render() {
     return (
-        <div class = "row">
-          <div class = "info-background column info small-column">
+        <div className = "row">
+          <div className = "info-background column info small-column">
             <Info/>
           </div>
-          <div class = "map-background column large-column">
+          <div className = "map-background column large-column">
             <LoadMap/>
             </div>
         </div>
