@@ -1,0 +1,138 @@
+[
+  {
+    "county": "Los Angeles",
+    "breed": ["Pit Bull Terrier", "American Staffordshire Terrier", "Yorkshire Terrier"],
+    "age":
+      {"adult": 23114,
+      "baby": 24913,
+      "senior": 3204,
+      "young": 37732},
+    "size":
+      {"x-large": 749,
+      "large": 14522,
+      "medium": 32291,
+      "small": 41401},
+    "gender":
+      {"female": 42210,
+      "male": 46679}
+  },
+  {
+    "county": "Orange",
+    "breed": ["Chihuahua", "Pit Bull Terrier", "Yorkshire Terrier"],
+    "age":
+      {"adult": 10090,
+      "baby": 9285,
+      "senior": 1492,
+      "young": 11281},
+    "size":
+      {"x-large": 242,
+      "large": 5375,
+      "medium": 8204,
+      "small": 18327},
+    "gender":
+      {"female": 15764,
+      "male": 16367}
+  },
+  {
+    "county": "Riverside",
+    "breed": ["Pit Bull Terrier", "Chihuahua", "Jack Russell Terrier"],
+    "age":
+      {"adult": 2061,
+      "baby": 2955,
+      "senior": 326,
+      "young": 2144},
+    "size":
+      {"x-large": 123,
+      "large": 1857,
+      "medium": 1941,
+      "small": 3565},
+    "gender":
+      {"female": 3666,
+      "male": 3820}
+  },
+  {
+    "county": "San Diego",
+    "breed": ["Chihuahua", "Pit Bull Terrier", "Black Labrador Retriever"],
+    "age":
+      {"adult": 9698,
+      "baby": 10905,
+      "senior": 1404,
+      "young": 15841},
+    "size": 
+      {"x-large": 293,
+      "large": 5284,
+      "medium": 13526,
+      "small": 18745},
+    "gender": 
+      {"female": 19215,
+      "male": 18587}
+  },
+  {
+    "county": "Santa Barbara",
+    "breed": ["Chihuahua", "English Cocker Spaniel", "Cocker Spaniel"],
+    "age":
+      {"adult": 1395,
+      "baby": 496,
+      "senior": 355,
+      "young": 1681},
+    "size":
+      {"x-large": 24,
+      "large": 742,
+      "medium": 1179,
+      "small": 1982},
+    "gender":
+      {"female": 1769,
+      "male": 2154}
+  },
+  {
+    "county": "Ventura",
+    "breed": ["Pit Bull Terrier", "American Staffordshire Terrier", "Yorkshire Terrier"],
+    "age":
+      {"adult": 519,
+      "baby": 315,
+      "senior": 76,
+      "young": 641},
+    "size":
+      {"x-large": 8,
+      "large": 318,
+      "medium": 351,
+      "small": 874},
+    "gender":
+      {"female": 811,
+      "male": 739}
+  },
+  {
+    "county": "Imperial",
+    "breed": ["Pit Bull Terrier", "Yellow Labrador Retriever", "Chocolate Labrador Retriever"],
+    "age":
+      {"adult": 27,
+      "baby": 9,
+      "senior": 0,
+      "young": 33},
+    "size":
+      {"x-large": 0,
+      "large": 19,
+      "medium": 27,
+      "small": 23},
+    "gender":
+      {"female": 38,
+      "male": 31}
+  },
+  {
+    "county": "San Bernardino",
+    "breed": ["Pit Bull Terrier", "Chihuahua", "Jack Russell Terrier"],
+    "age":
+      {"adult": 4495,
+      "baby": 2170,
+      "senior": 383,
+      "young": 3635},
+    "size":
+      {"x-large": 187,
+      "large": 2861,
+      "medium": 3380,
+      "small": 4255},
+    "gender":
+      {"female": 5261,
+      "male": 5396}
+  }
+]
