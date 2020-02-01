@@ -16,6 +16,7 @@ class LoadMap extends React.Component {
     render() {
       return (
           <div>
+            <h3>Click on a Southern California County</h3>
               <USMap/>
           </div>
       );
