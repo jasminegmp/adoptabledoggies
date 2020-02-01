@@ -1,0 +1,34 @@
+@import 'foundation';
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+html{
+    height: 100%;
+}
+
+body{
+    text-align: center;
+    height: 100%;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 16px;
+}
+
+#root{
+    height: 100%;
+}
+
+h1{
+    text-align: center;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+}
+
+a{
+    color: $white;
+    text-decoration: none;
+}
+
+a:hover{
+    color: $dark-white;
+    text-decoration: none;
+}

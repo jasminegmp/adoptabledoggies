@@ -1,8 +1,6 @@
 Open
 - Host on Heroku
-- Make things look good
-- Document
-- Clean up code
+
 IF TIME:
 - one hot encoding on dog breeds (keep in mind imbalance)
 - check results on random forest classifier on all categorical attributes
@@ -58,3 +56,6 @@ Done
 Attrition: https://simplemaps.com/data/us-zips
 - Integrate breed data with map display
 - Integrate dog SVG visualizations
+- Make things look good
+- Clean up code
+- Document
