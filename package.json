@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@jaames/iro": "^4.5.3",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "d3": "^5.15.0",
     "heroku": "^7.37.0",
     "node-sass": "^4.13.1",
